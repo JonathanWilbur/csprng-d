@@ -49,19 +49,19 @@ class CryptographicallySecurePseudoRandomNumberGenerator
         private alias NTSTATUS = uint;
 
         // Used by the Cryptography: Next Generation (CNG) API
-        private const HMODULE bcrypt; // A pointer to the loaded Bcrypt library (Bcrypt.dll)
-        private const BCRYPT_ALG_HANDLE cngProviderHandle; // A pointer to the CNG Provider Handle, which is used by BCryptGenRandomAddress()
-        private const FARPROC bCryptOpenAlgorithmProviderAddress; // A pointer to the BCryptOpenAlgorithmProvider() function, as obtained from this.bcrypt
-        private const FARPROC bCryptCloseAlgorithmProviderAddress; // A pointer to the BCryptCloseAlgorithmProvider() function, as obtained from this.bcrypt
-        private const FARPROC bCryptGenRandomAddress; // A pointer to the BCryptGenRandom() function, as obtained from this.bcrypt
+        private HMODULE bcrypt; // A pointer to the loaded Bcrypt library (Bcrypt.dll)
+        private BCRYPT_ALG_HANDLE cngProviderHandle; // A pointer to the CNG Provider Handle, which is used by BCryptGenRandomAddress()
+        private FARPROC bCryptOpenAlgorithmProviderAddress; // A pointer to the BCryptOpenAlgorithmProvider() function, as obtained from this.bcrypt
+        private FARPROC bCryptCloseAlgorithmProviderAddress; // A pointer to the BCryptCloseAlgorithmProvider() function, as obtained from this.bcrypt
+        private FARPROC bCryptGenRandomAddress; // A pointer to the BCryptGenRandom() function, as obtained from this.bcrypt
 
         // Used by the CryptoAPI and the legacy cryptography API
-        private const HMODULE advapi32; // A pointer to the loaded Windows Advanced API (advapi32.dll)
-        private const HCRYPTPROV cryptographicServiceProviderHandle; // A pointer to the CSP, which is obtained with CryptoAcquireContext(), and used by CryptGenRandom()
-        private const FARPROC cryptAcquireContextAddress; // A pointer to CryptAcquireContext(), as obtained from this.advapi32
-        private const FARPROC cryptReleaseContextAddress; // A pointer to CryptReleaseContext(), as obtained from this.advapi32
-        private const FARPROC cryptGenRandomAddress; // A pointer to CryptGenRandom(), as obtained from this.advapi32
-        private const FARPROC rtlGenRandomAddress; // A pointer to RtlGenRandom(), as obtained from this.advapi32
+        private HMODULE advapi32; // A pointer to the loaded Windows Advanced API (advapi32.dll)
+        private HCRYPTPROV cryptographicServiceProviderHandle; // A pointer to the CSP, which is obtained with CryptoAcquireContext(), and used by CryptGenRandom()
+        private FARPROC cryptAcquireContextAddress; // A pointer to CryptAcquireContext(), as obtained from this.advapi32
+        private FARPROC cryptReleaseContextAddress; // A pointer to CryptReleaseContext(), as obtained from this.advapi32
+        private FARPROC cryptGenRandomAddress; // A pointer to CryptGenRandom(), as obtained from this.advapi32
+        private FARPROC rtlGenRandomAddress; // A pointer to RtlGenRandom(), as obtained from this.advapi32
 
         ///
         public alias isUsingCNGAPI = isUsingCryptographyNextGenerationApplicationProgrammingInterface;
@@ -320,7 +320,7 @@ class CryptographicallySecurePseudoRandomNumberGenerator
             and any relevant cryptographic constructs used by those libraries
             are released.
         */
-        public @system nothrow
+        public @system
         ~this ()
         {
             if (this.isUsingCNGAPI)

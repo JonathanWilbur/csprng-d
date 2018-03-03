@@ -26,7 +26,8 @@ void main()
     signal(SIGINT, &handler);
     CSPRNG c = new CSPRNG();
     uint i = 0;
-    while (i++ < uint.max && !done)
+    uint max = (uint.max / 16);
+    while (i++ < max && !done)
     {
         size_t index = cast(size_t) (cast(ubyte[]) c.getBytes(1))[0];
         counts[index]++;

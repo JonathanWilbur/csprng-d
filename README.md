@@ -3,7 +3,7 @@
 * Author: [Jonathan M. Wilbur](https://jonathan.wilbur.space) <[jonathan@wilbur.space](mailto:jonathan@wilbur.space)>
 * Copyright Year: 2018
 * License: [MIT License](https://mit-license.org/)
-* Version: [0.3.0](https://semver.org/)
+* Version: [1.0.0](https://semver.org/)
 
 ## What This Library
 
@@ -55,37 +55,6 @@ get-cryptobytes 10
 ```
 
 It takes only a single argument, specifying the number of random bytes wanted.
-
-## Development
-
-- [ ] Development
-  - [x] Create `get-cryptobytes` tool.
-  - [ ] Support random byte generation through `RDRAND`
-  - [x] Create a better system of exceptions
-  - [x] Make `get-cryptobytes` display CSPRNG information if no argument provided
-- [x] Documentation
-  - [x] Create `man` pages for the `get-cryptobytes` tool.
-  - [x] Create `tools.md`
-  - [x] Create `library.md`
-  - [x] Embedded Documentation
-- [ ] Testing
-  - [ ] Cross-Platform Testing
-    - [ ] Windows
-    - [x] Mac OS X
-    - [ ] Linux
-  - [x] Test for uniform distribution of output bytes.
-    - [ ] Windows
-    - [x] Mac OS X
-    - [ ] Linux
-  - [x] Test with multiple CSPRNGs.
-    - [ ] Windows
-    - [x] Mac OS X
-    - [ ] Linux
-  - [x] Test with concurrent CSPRNGs.
-    - [ ] Windows
-    - [x] Mac OS X
-    - [ ] Linux
-  - [ ] CVE Security Review
 
 ## Contact Me
 

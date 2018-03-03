@@ -203,14 +203,92 @@ code, .mono {
     retrieve cryptographically-secure pseudo-random bytes.</section>
 </section>
 <ul class="ddoc_members">
-	<li class="ddoc_member"><a href="#CryptographicallySecurePseudoRandomNumberGenerator.readBufferSize" id="CryptographicallySecurePseudoRandomNumberGenerator.readBufferSize"><code class="member">readBufferSize</code></a>
+	<li class="ddoc_member"><a href="#CryptographicallySecurePseudoRandomNumberGenerator.isUsingCNGAPI" id="CryptographicallySecurePseudoRandomNumberGenerator.isUsingCNGAPI"><code class="member">isUsingCNGAPI</code></a>
 <section class="declaration">
     <code>
-        <span class="ddoc_anchor" id="CryptographicallySecurePseudoRandomNumberGenerator.readBufferSize"></span>static immutable size_t <code class="code">readBufferSize</code>;
+        <span class="ddoc_anchor" id="CryptographicallySecurePseudoRandomNumberGenerator.isUsingCNGAPI"></span>alias <code class="code">isUsingCNGAPI</code> = isUsingCryptographyNextGenerationApplicationProgrammingInterface;
 
     </code>
 </section>
-<div><section class="module-info"><section id="summary">The size of the buffer used to read from <span class="mono">/dev/random</span></section>
+<div>
+</div>
+</li><li class="ddoc_member"><a href="#CryptographicallySecurePseudoRandomNumberGenerator.isUsingCryptographyNextGenerationAPI" id="CryptographicallySecurePseudoRandomNumberGenerator.isUsingCryptographyNextGenerationAPI"><code class="member">isUsingCryptographyNextGenerationAPI</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="CryptographicallySecurePseudoRandomNumberGenerator.isUsingCryptographyNextGenerationAPI"></span>alias <code class="code">isUsingCryptographyNextGenerationAPI</code> = isUsingCryptographyNextGenerationApplicationProgrammingInterface;
+
+    </code>
+</section>
+<div>
+</div>
+</li><li class="ddoc_member"><a href="#CryptographicallySecurePseudoRandomNumberGenerator.isUsingCNGApplicationProgrammingInterface" id="CryptographicallySecurePseudoRandomNumberGenerator.isUsingCNGApplicationProgrammingInterface"><code class="member">isUsingCNGApplicationProgrammingInterface</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="CryptographicallySecurePseudoRandomNumberGenerator.isUsingCNGApplicationProgrammingInterface"></span>alias <code class="code">isUsingCNGApplicationProgrammingInterface</code> = isUsingCryptographyNextGenerationApplicationProgrammingInterface;
+
+    </code>
+</section>
+<div>
+</div>
+</li><li class="ddoc_member"><a href="#CryptographicallySecurePseudoRandomNumberGenerator.isUsingCryptographyNextGenerationApplicationProgrammingInterface" id="CryptographicallySecurePseudoRandomNumberGenerator.isUsingCryptographyNextGenerationApplicationProgrammingInterface"><code class="member">isUsingCryptographyNextGenerationApplicationProgrammingInterface</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="CryptographicallySecurePseudoRandomNumberGenerator.isUsingCryptographyNextGenerationApplicationProgrammingInterface"></span>nothrow @nogc @property @safe bool <code class="code">isUsingCryptographyNextGenerationApplicationProgrammingInterface</code>();
+
+    </code>
+</section>
+<div><section class="module-info"><section id="summary">Returns boolean indicating whether this library is using the Windows
+            <b>Cryptography: Next Generation</b> API to generate random bytes from
+            the <span class="mono">BCryptGenRandom</span> API function.
+</section>
+<div class="description">More specifically, this library returns <code class="code">true</code> if <span class="mono">Bcrypt.dll</span> was found,
+            loaded, and all three requisite functions could be loaded from it,
+            which are:
+            <ul>                <li><span class="mono">BCryptOpenAlgorithmProvider</span></li>
+                <li><span class="mono">BCryptCloseAlgorithmProvider</span></li>
+                <li><span class="mono">BCryptGenRandom</span></li>
+            </ul></div>
+</section>
+</div>
+</li><li class="ddoc_member"><a href="#CryptographicallySecurePseudoRandomNumberGenerator.isUsingCryptoAPI" id="CryptographicallySecurePseudoRandomNumberGenerator.isUsingCryptoAPI"><code class="member">isUsingCryptoAPI</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="CryptographicallySecurePseudoRandomNumberGenerator.isUsingCryptoAPI"></span>alias <code class="code">isUsingCryptoAPI</code> = isUsingCryptoApplicationProgrammingInterface;
+
+    </code>
+</section>
+<div>
+</div>
+</li><li class="ddoc_member"><a href="#CryptographicallySecurePseudoRandomNumberGenerator.isUsingCryptoApplicationProgrammingInterface" id="CryptographicallySecurePseudoRandomNumberGenerator.isUsingCryptoApplicationProgrammingInterface"><code class="member">isUsingCryptoApplicationProgrammingInterface</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="CryptographicallySecurePseudoRandomNumberGenerator.isUsingCryptoApplicationProgrammingInterface"></span>nothrow @nogc @property @safe bool <code class="code">isUsingCryptoApplicationProgrammingInterface</code>();
+
+    </code>
+</section>
+<div><section class="module-info"><section id="summary">Returns boolean indicating whether this library is using the Windows
+            <b>Crypto API</b> to generate random bytes from
+            the <span class="mono">CryptGenRandom</span> API function.
+</section>
+<div class="description">More specifically, this library returns <code class="code">true</code> if <span class="mono">advapi32.dll</span> was found,
+            loaded, and all three requisite functions could be loaded from it,
+            which are:
+            <ul>                <li><span class="mono">CryptAcquireContext</span></li>
+                <li><span class="mono">CryptReleaseContext</span></li>
+                <li><span class="mono">CryptGenRandom</span></li>
+            </ul></div>
+</section>
+</div>
+</li><li class="ddoc_member"><a href="#CryptographicallySecurePseudoRandomNumberGenerator.isUsingRtlGenRandom" id="CryptographicallySecurePseudoRandomNumberGenerator.isUsingRtlGenRandom"><code class="member">isUsingRtlGenRandom</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="CryptographicallySecurePseudoRandomNumberGenerator.isUsingRtlGenRandom"></span>nothrow @nogc @property @safe bool <code class="code">isUsingRtlGenRandom</code>();
+
+    </code>
+</section>
+<div><section class="module-info"><section id="summary">Returns a boolean indicating whether this library was able to load
+            <span class="mono">advapi32.dll</span> and <span class="mono">RtlGenRandom</span> from it, and will
+            use <span class="mono">RtlGenRandom</span> to obtain secure random bytes.</section>
 </section>
 </div>
 </li><li class="ddoc_member"><a href="#CryptographicallySecurePseudoRandomNumberGenerator.getBytes" id="CryptographicallySecurePseudoRandomNumberGenerator.getBytes"><code class="member">getBytes</code></a>
@@ -221,20 +299,41 @@ code, .mono {
     </code>
 </section>
 <div><section class="module-info"><section id="summary">Returns the specified number of cryptographically-secure
-            pseudo-random bytes, using one of the system APIs.</section>
+            pseudo-random bytes, using one of the system APIs.
 </section>
+<div class="ddoc_throws">
+	<h4>Throws</h4>
+	<p class="para">
+		<ul>                <li><code class="d inline">CSPRNGException</code> if one of the functions from the
+                    automatically-select cryptography API could not be loaded.</li>
+            </ul>
+	</p>
+</div></section>
 </div>
 </li><li class="ddoc_member"><a href="#CryptographicallySecurePseudoRandomNumberGenerator.this" id="CryptographicallySecurePseudoRandomNumberGenerator.this"><code class="member">this</code></a>
 <section class="declaration">
     <code>
-        <span class="ddoc_anchor" id="CryptographicallySecurePseudoRandomNumberGenerator.this"></span>@safe this();
+        <span class="ddoc_anchor" id="CryptographicallySecurePseudoRandomNumberGenerator.this"></span>@system this();
 
     </code>
 </section>
 <div><section class="module-info"><section id="summary">The constructor for a CSPRNG. When a <code class="d inline">CSPRNG</code> is created with
-            this constructor, the pseudo-device, <span class="mono">/dev/random</span> is opened
-            for reading (not writing). If it cannot be opened, the constructor
-            throws a <code class="d inline">CSPRNGException</code> and the <code class="d inline">CSPRNG</code> will not be created.</section>
+            this constructor, the relevant libraries and functions from them are
+            loaded. If they cannot be loaded, the constructor throws a
+            <code class="d inline">CSPRNGException</code> and the <code class="d inline">CSPRNG</code> will not be created.
+</section>
+<div class="description">This constructor first attempts to load the Windows
+</div>
+<div class="ddoc_section">
+	<p class="para">
+		<span class="ddoc_section_h">Cryptography:</span>
+Next Generation API. If that cannot be loaded, it
+            attempts to load the CryptoAPI. If that cannot be loaded, it attempts
+            to load the <span class="mono">RtlGenRandom</span> function. If all of those fail,
+            the <code class="d inline">CSPRNGException</code> is thrown, since no source of
+            cryptographically-secure pseudo-random bytes can be accessed.
+	</p>
+</div>
 </section>
 </div>
 </li>
@@ -246,7 +345,7 @@ code, .mono {
 
         </div>
         <div id="footer">
-            <span id="timestamp">Sat Mar  3 12:47:43 2018
+            <span id="timestamp">Sat Mar  3 15:40:00 2018
 </span>
         </div>
     </body>
