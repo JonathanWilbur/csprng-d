@@ -7,41 +7,72 @@
    {
     "name" : "std.conv",
     "kind" : "import",
-    "line" : 5,
-    "char" : 8,
+    "line" : 16,
+    "char" : 16,
     "protection" : "private",
     "selective" : [
      "text"
     ]
    },
    {
+    "name" : "CSPRNGException",
+    "kind" : "alias",
+    "line" : 19,
+    "char" : 8,
+    "deco" : "C6csprng6system59CryptographicallySecurePseudoRandomNumberGeneratorException"
+   },
+   {
+    "name" : "CryptographicallySecurePseudoRandomNumberGeneratorException",
+    "kind" : "class",
+    "line" : 22,
+    "char" : 1,
+    "base" : "object.Exception",
+    "members" : [
+     {
+      "name" : "std.exception",
+      "kind" : "import",
+      "line" : 24,
+      "char" : 12,
+      "protection" : "private",
+      "selective" : [
+       "basicExceptionCtors"
+      ]
+     },
+     {
+      "name" : "basicExceptionCtors!()",
+      "kind" : "mixin",
+      "line" : 25,
+      "char" : 5
+     }
+    ]
+   },
+   {
     "name" : "CSPRNG",
     "kind" : "alias",
-    "line" : 10,
+    "line" : 29,
     "char" : 8,
     "deco" : "C6csprng6system50CryptographicallySecurePseudoRandomNumberGenerator"
    },
    {
     "name" : "CryptographicallySecurePseudoRandomNumberGenerator",
     "kind" : "class",
-    "line" : 13,
+    "line" : 35,
     "char" : 1,
     "members" : [
      {
       "name" : "std.stdio",
       "kind" : "import",
-      "line" : 225,
+      "line" : 348,
       "char" : 16,
       "protection" : "private",
       "selective" : [
-       "File",
-       "writeln"
+       "File"
       ]
      },
      {
       "name" : "readBufferSize",
       "kind" : "variable",
-      "line" : 227,
+      "line" : 351,
       "char" : 40,
       "storageClass" : [
        "static",
@@ -49,13 +80,14 @@
       ],
       "deco" : "ym",
       "originalType" : "size_t",
-      "init" : "10LU"
+      "init" : "128LU"
      },
      {
       "name" : "randomFile",
       "kind" : "variable",
-      "line" : 228,
-      "char" : 21,
+      "protection" : "private",
+      "line" : 352,
+      "char" : 29,
       "storageClass" : [
        "static"
       ],
@@ -64,36 +96,36 @@
      {
       "name" : "getBytes",
       "kind" : "function",
-      "line" : 231,
+      "line" : 359,
       "char" : 16,
       "deco" : "FxmZAv",
-      "originalType" : "void[](in size_t length)",
+      "originalType" : "@system void[](in size_t length)",
       "parameters" : [
        {
         "name" : "length",
         "deco" : "xm"
        }
       ],
-      "endline" : 246,
+      "endline" : 371,
       "endchar" : 9
      },
      {
       "name" : "this",
       "kind" : "constructor",
-      "line" : 248,
+      "line" : 380,
       "char" : 9,
-      "deco" : "FZC6csprng6system50CryptographicallySecurePseudoRandomNumberGenerator",
-      "originalType" : "()",
-      "endline" : 253,
+      "deco" : "FNfZC6csprng6system50CryptographicallySecurePseudoRandomNumberGenerator",
+      "originalType" : "@safe ()",
+      "endline" : 393,
       "endchar" : 9
      },
      {
       "name" : "~this",
       "kind" : "destructor",
-      "line" : 255,
+      "line" : 402,
       "char" : 9,
-      "deco" : "FZv",
-      "endline" : 259,
+      "deco" : "FNfZv",
+      "endline" : 406,
       "endchar" : 9
      },
      {

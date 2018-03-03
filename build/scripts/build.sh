@@ -9,7 +9,7 @@ GREEN='\033[32m'
 RED='\033[31m'
 NOCOLOR='\033[0m'
 TIMESTAMP=$(date '+%Y-%m-%d@%H:%M:%S')
-VERSION="0.1.0"
+VERSION="0.3.0"
 
 if [ "$(uname)" == "Darwin" ]; then
 	ECHOFLAGS=""
@@ -59,6 +59,21 @@ if dmd \
  -of./build/libraries/csprng-${VERSION}.so \
  -shared \
  -fPIC \
+ -inline \
+ -release \
+ -O \
+ -v >> ./build/logs/${TIMESTAMP}.log 2>&1; then
+    echo $ECHOFLAGS "${GREEN}Done.${NOCOLOR}"
+else
+    echo $ECHOFLAGS "${RED}Failed. See ./build/logs.${NOCOLOR}"
+fi
+
+echo $ECHOFLAGS "Building the CSPRNG Command-Line Tool, get-cryptobytes... \c"
+if dmd \
+ ./source/tools/get_cryptobytes.d \
+ -I./build/interfaces/source \
+ ./build/libraries/csprng-${VERSION}.a \
+ -of./build/executables/get-cryptobytes \
  -inline \
  -release \
  -O \

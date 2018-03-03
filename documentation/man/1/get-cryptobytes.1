@@ -27,17 +27,32 @@
 .SH NAME
 .BR get-cryptobytes ", Cryptographically-Secure Pseudo-Random Byte Generator"
 .SH SYNOPSIS
-.B get-cryptobytes {number of bytes}
+.B get-cryptobytes [number of bytes]
 .SH DESCRIPTION
 Writes a specified number of cryptographically-secure random bytes to
 .IR stdout .
+If run without any arguments, it returns information about the CSPRNG API
+that will be used.
 .SH EXIT STATUS
 .TP
 .B 0
 Success
 .TP
-.B -1
-Invalid number of arguments
+.B 1
+Invalid number of arguments.
+.TP
+.B 2
+Exception encountered when trying to load system APIs for getting random bytes.
+.TP
+.B 3
+Exception encountered when trying to load the selected function from the system API
+or when trying to read from /dev/random.
+.TP
+.B 4
+Number of bytes to generate is too large.
+.TP
+.B 5
+Second argument is not a number.
 .SH BUGS
 There are no known bugs with this program, however, if you find any, please
 report them to

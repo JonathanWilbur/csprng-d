@@ -3,7 +3,7 @@
 * Author: [Jonathan M. Wilbur](https://jonathan.wilbur.space) <[jonathan@wilbur.space](mailto:jonathan@wilbur.space)>
 * Copyright Year: 2018
 * License: [MIT License](https://mit-license.org/)
-* Version: [0.2.0](https://semver.org/)
+* Version: [0.3.0](https://semver.org/)
 
 ## What This Library
 
@@ -42,16 +42,32 @@ On the backend, this library handles opening, caching, and closing file
 descriptors, and efficiently managing the Windows cryptography API constructs,
 so you don't have to!
 
+If the `CSPRNG` object fails to load the system APIs for generating secure
+random bytes, it will throw a `CSPRNGException`.
+
+## Command-Line Tool Usage
+
+This library comes with a simple command-line tool for generating secure
+random bytes, called `get-cryptobytes`. It is used like so:
+
+```bash
+get-cryptobytes 10
+```
+
+It takes only a single argument, specifying the number of random bytes wanted.
+
 ## Development
 
 - [ ] Development
   - [x] Create `get-cryptobytes` tool.
   - [ ] Support random byte generation through `RDRAND`
-  - [ ] Create a better system of exceptions
-- [ ] Documentation
+  - [x] Create a better system of exceptions
+  - [x] Make `get-cryptobytes` display CSPRNG information if no argument provided
+- [x] Documentation
   - [x] Create `man` pages for the `get-cryptobytes` tool.
-  - [ ] Create `tools.md`
-  - [ ] Create `library.md`
+  - [x] Create `tools.md`
+  - [x] Create `library.md`
+  - [x] Embedded Documentation
 - [ ] Testing
   - [ ] Cross-Platform Testing
     - [ ] Windows
@@ -70,10 +86,6 @@ so you don't have to!
     - [x] Mac OS X
     - [ ] Linux
   - [ ] CVE Security Review
-
-## Bugs
-
-## See Also
 
 ## Contact Me
 

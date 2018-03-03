@@ -11,7 +11,7 @@ mkdir .\build\maps 2>&1 | Out-Null
 mkdir .\build\objects 2>&1 | Out-Null
 mkdir .\build\scripts 2>&1 | Out-Null
 
-$version = "0.1.0"
+$version = "0.3.0"
 
 Write-Host "Building the CSPRNG Library (static)... " -NoNewLine
 dmd `
@@ -38,4 +38,16 @@ dmd `
 -inline `
 -release `
 -d
+Write-Host "Done." -ForegroundColor Green
+
+Write-Host "Building the CSPRNG Command-Line Tool, get-cryptobytes... " -NoNewLine
+dmd `
+ .\source\tools\get_cryptobytes.d `
+ -I".\\build\\interfaces\\source" `
+ .\build\libraries\csprng-$version.a `
+ -of".\\build\\executables\\get-cryptobytes" `
+ -inline `
+ -release `
+ -O `
+ -v
 Write-Host "Done." -ForegroundColor Green

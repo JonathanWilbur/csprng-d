@@ -138,11 +138,52 @@ code, .mono {
             <h2>ASN.1 Codecs, as specified in ITU X.690, including BER, DER, and PER</h2>
         </div>
         <div id="content">
-            <section class="module-info"><section id="summary">System sources for randomness.</section>
+            <section class="module-info"><section id="summary">A Cryptographically-Secure Pseudo-Random Number Generator that uses <code class="code">system</code>
+    APIs as its source of secure random bytes. In the case of Windows, it uses
+    the <span class="mono">BCryptGenRandom</span>, <span class="mono">CryptGenRandom</span>, and <span class="mono">RtlGenRandom</span>
+    libraries in that order of fallback. On POSIX-ish systems, it uses the
+    pseudo-device, <span class="mono">/dev/random</span>, as its source of secure random bytes.
+</section>
+<div class="ddoc_authors">
+	<h4>Authors</h4>
+	<p class="para">
+		<ul>        <li><span class="person">
+    <a href="http://jonathan.wilbur.space">Jonathan M. Wilbur</a>
+    <span>&lt;<a href="mailto:jonathan@wilbur.space">jonathan@wilbur.space</a>&gt;</span>
+</span></li>
+    </ul>
+
+	</p>
+</div>
+<div class="ddoc_license">
+	<h4>License</h4>
+	<p class="para">
+		<a href="https://mit-license.org/">MIT License</a>
+	</p>
+</div>
 </section>
 <section class="module-members">
     <ul class="ddoc_members">
-	<li class="ddoc_member"><a href="#CSPRNG" id="CSPRNG"><code class="member">CSPRNG</code></a>
+	<li class="ddoc_member"><a href="#CSPRNGException" id="CSPRNGException"><code class="member">CSPRNGException</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="CSPRNGException"></span>alias <code class="code">CSPRNGException</code> = CryptographicallySecurePseudoRandomNumberGeneratorException;
+
+    </code>
+</section>
+<div>
+</div>
+</li><li class="ddoc_member"><a href="#CryptographicallySecurePseudoRandomNumberGeneratorException" id="CryptographicallySecurePseudoRandomNumberGeneratorException"><code class="member">CryptographicallySecurePseudoRandomNumberGeneratorException</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="CryptographicallySecurePseudoRandomNumberGeneratorException"></span>class <code class="code">CryptographicallySecurePseudoRandomNumberGeneratorException</code>: <span class="ddoc_psuper_symbol">object.Exception</span>;
+
+    </code>
+</section>
+<div><section class="module-info"><section id="summary">A generic CSPRNG exception</section>
+</section>
+</div>
+</li><li class="ddoc_member"><a href="#CSPRNG" id="CSPRNG"><code class="member">CSPRNG</code></a>
 <section class="declaration">
     <code>
         <span class="ddoc_anchor" id="CSPRNG"></span>alias <code class="code">CSPRNG</code> = CryptographicallySecurePseudoRandomNumberGenerator;
@@ -158,79 +199,43 @@ code, .mono {
 
     </code>
 </section>
-<div>
+<div><section class="module-info"><section id="summary">The class that wraps the system's CSPRNG APIs, making it easy to
+    retrieve cryptographically-secure pseudo-random bytes.</section>
+</section>
 <ul class="ddoc_members">
-	<li class="ddoc_member"><a href="#CryptographicallySecurePseudoRandomNumberGenerator.isUsingCNGAPI" id="CryptographicallySecurePseudoRandomNumberGenerator.isUsingCNGAPI"><code class="member">isUsingCNGAPI</code></a>
+	<li class="ddoc_member"><a href="#CryptographicallySecurePseudoRandomNumberGenerator.readBufferSize" id="CryptographicallySecurePseudoRandomNumberGenerator.readBufferSize"><code class="member">readBufferSize</code></a>
 <section class="declaration">
     <code>
-        <span class="ddoc_anchor" id="CryptographicallySecurePseudoRandomNumberGenerator.isUsingCNGAPI"></span>alias <code class="code">isUsingCNGAPI</code> = isUsingCryptographyNextGenerationApplicationProgrammingInterface;
+        <span class="ddoc_anchor" id="CryptographicallySecurePseudoRandomNumberGenerator.readBufferSize"></span>static immutable size_t <code class="code">readBufferSize</code>;
 
     </code>
 </section>
-<div>
-</div>
-</li><li class="ddoc_member"><a href="#CryptographicallySecurePseudoRandomNumberGenerator.isUsingCryptographyNextGenerationAPI" id="CryptographicallySecurePseudoRandomNumberGenerator.isUsingCryptographyNextGenerationAPI"><code class="member">isUsingCryptographyNextGenerationAPI</code></a>
-<section class="declaration">
-    <code>
-        <span class="ddoc_anchor" id="CryptographicallySecurePseudoRandomNumberGenerator.isUsingCryptographyNextGenerationAPI"></span>alias <code class="code">isUsingCryptographyNextGenerationAPI</code> = isUsingCryptographyNextGenerationApplicationProgrammingInterface;
-
-    </code>
+<div><section class="module-info"><section id="summary">The size of the buffer used to read from <span class="mono">/dev/random</span></section>
 </section>
-<div>
-</div>
-</li><li class="ddoc_member"><a href="#CryptographicallySecurePseudoRandomNumberGenerator.isUsingCNGApplicationProgrammingInterface" id="CryptographicallySecurePseudoRandomNumberGenerator.isUsingCNGApplicationProgrammingInterface"><code class="member">isUsingCNGApplicationProgrammingInterface</code></a>
-<section class="declaration">
-    <code>
-        <span class="ddoc_anchor" id="CryptographicallySecurePseudoRandomNumberGenerator.isUsingCNGApplicationProgrammingInterface"></span>alias <code class="code">isUsingCNGApplicationProgrammingInterface</code> = isUsingCryptographyNextGenerationApplicationProgrammingInterface;
-
-    </code>
-</section>
-<div>
-</div>
-</li><li class="ddoc_member"><a href="#CryptographicallySecurePseudoRandomNumberGenerator.isUsingCryptographyNextGenerationApplicationProgrammingInterface" id="CryptographicallySecurePseudoRandomNumberGenerator.isUsingCryptographyNextGenerationApplicationProgrammingInterface"><code class="member">isUsingCryptographyNextGenerationApplicationProgrammingInterface</code></a>
-<section class="declaration">
-    <code>
-        <span class="ddoc_anchor" id="CryptographicallySecurePseudoRandomNumberGenerator.isUsingCryptographyNextGenerationApplicationProgrammingInterface"></span>@property bool <code class="code">isUsingCryptographyNextGenerationApplicationProgrammingInterface</code>();
-
-    </code>
-</section>
-<div>
-</div>
-</li><li class="ddoc_member"><a href="#CryptographicallySecurePseudoRandomNumberGenerator.isUsingCryptoAPI" id="CryptographicallySecurePseudoRandomNumberGenerator.isUsingCryptoAPI"><code class="member">isUsingCryptoAPI</code></a>
-<section class="declaration">
-    <code>
-        <span class="ddoc_anchor" id="CryptographicallySecurePseudoRandomNumberGenerator.isUsingCryptoAPI"></span>alias <code class="code">isUsingCryptoAPI</code> = isUsingCryptoApplicationProgrammingInterface;
-
-    </code>
-</section>
-<div>
-</div>
-</li><li class="ddoc_member"><a href="#CryptographicallySecurePseudoRandomNumberGenerator.isUsingCryptoApplicationProgrammingInterface" id="CryptographicallySecurePseudoRandomNumberGenerator.isUsingCryptoApplicationProgrammingInterface"><code class="member">isUsingCryptoApplicationProgrammingInterface</code></a>
-<section class="declaration">
-    <code>
-        <span class="ddoc_anchor" id="CryptographicallySecurePseudoRandomNumberGenerator.isUsingCryptoApplicationProgrammingInterface"></span>@property bool <code class="code">isUsingCryptoApplicationProgrammingInterface</code>();
-
-    </code>
-</section>
-<div>
-</div>
-</li><li class="ddoc_member"><a href="#CryptographicallySecurePseudoRandomNumberGenerator.isUsingRtlGenRandom" id="CryptographicallySecurePseudoRandomNumberGenerator.isUsingRtlGenRandom"><code class="member">isUsingRtlGenRandom</code></a>
-<section class="declaration">
-    <code>
-        <span class="ddoc_anchor" id="CryptographicallySecurePseudoRandomNumberGenerator.isUsingRtlGenRandom"></span>@property bool <code class="code">isUsingRtlGenRandom</code>();
-
-    </code>
-</section>
-<div>
 </div>
 </li><li class="ddoc_member"><a href="#CryptographicallySecurePseudoRandomNumberGenerator.getBytes" id="CryptographicallySecurePseudoRandomNumberGenerator.getBytes"><code class="member">getBytes</code></a>
 <section class="declaration">
     <code>
-        <span class="ddoc_anchor" id="CryptographicallySecurePseudoRandomNumberGenerator.getBytes"></span>void[] <code class="code">getBytes</code>(in size_t <code class="code">length</code>);
+        <span class="ddoc_anchor" id="CryptographicallySecurePseudoRandomNumberGenerator.getBytes"></span>@system void[] <code class="code">getBytes</code>(in size_t <code class="code">length</code>);
 
     </code>
 </section>
-<div>
+<div><section class="module-info"><section id="summary">Returns the specified number of cryptographically-secure
+            pseudo-random bytes, using one of the system APIs.</section>
+</section>
+</div>
+</li><li class="ddoc_member"><a href="#CryptographicallySecurePseudoRandomNumberGenerator.this" id="CryptographicallySecurePseudoRandomNumberGenerator.this"><code class="member">this</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="CryptographicallySecurePseudoRandomNumberGenerator.this"></span>@safe this();
+
+    </code>
+</section>
+<div><section class="module-info"><section id="summary">The constructor for a CSPRNG. When a <code class="d inline">CSPRNG</code> is created with
+            this constructor, the pseudo-device, <span class="mono">/dev/random</span> is opened
+            for reading (not writing). If it cannot be opened, the constructor
+            throws a <code class="d inline">CSPRNGException</code> and the <code class="d inline">CSPRNG</code> will not be created.</section>
+</section>
 </div>
 </li>
 </ul>
@@ -241,7 +246,7 @@ code, .mono {
 
         </div>
         <div id="footer">
-            <span id="timestamp">Sat Mar  3 07:50:13 2018
+            <span id="timestamp">Sat Mar  3 12:47:43 2018
 </span>
         </div>
     </body>

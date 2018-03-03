@@ -12,7 +12,7 @@ mkdir .\build\maps > nul 2>&1
 mkdir .\build\objects > nul 2>&1
 mkdir .\build\scripts > nul 2>&1
 
-set version="0.1.0"
+set version="0.3.0"
 
 echo|set /p="Building the CSPRNG Library (static)... "
 dmd ^
@@ -39,4 +39,16 @@ dmd ^
  -inline ^
  -release ^
  -d
+echo Done.
+
+echo|set /p="Building the CSPRNG Command-Line Tool, get-cryptobytes... \c"
+dmd ^
+ .\source\tools\get_cryptobytes.d ^
+ -I.\build\interfaces\source ^
+ .\build\libraries\csprng-%version%.a ^
+ -of.\build\executables\get-cryptobytes ^
+ -inline ^
+ -release ^
+ -O ^
+ -v
 echo Done.

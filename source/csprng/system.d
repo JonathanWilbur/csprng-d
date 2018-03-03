@@ -1,14 +1,36 @@
 /**
-    System sources for randomness.
+    A Cryptographically-Secure Pseudo-Random Number Generator that uses system
+    APIs as its source of secure random bytes. In the case of Windows, it uses
+    the $(MONO BCryptGenRandom), $(MONO CryptGenRandom), and $(MONO RtlGenRandom)
+    libraries in that order of fallback. On POSIX-ish systems, it uses the
+    pseudo-device, $(MONO /dev/random), as its source of secure random bytes.
+
+    Authors:
+    $(UL
+        $(LI $(PERSON Jonathan M. Wilbur, jonathan@wilbur.space, http://jonathan.wilbur.space))
+    )
+    Copyright: Copyright (C) Jonathan M. Wilbur
+    License: $(LINK https://mit-license.org/, MIT License)
 */
 module csprng.system;
-import std.conv : text;
+private import std.conv : text;
 
-// TODO: Check for STATUS_SUCCESS, not just true
+///
+public alias CSPRNGException = CryptographicallySecurePseudoRandomNumberGeneratorException;
+/// A generic CSPRNG exception
+public
+class CryptographicallySecurePseudoRandomNumberGeneratorException : Exception
+{
+    import std.exception : basicExceptionCtors;
+    mixin basicExceptionCtors;
+}
 
 ///
 public alias CSPRNG = CryptographicallySecurePseudoRandomNumberGenerator;
-///
+/**
+    The class that wraps the system's CSPRNG APIs, making it easy to
+    retrieve cryptographically-secure pseudo-random bytes.
+*/
 public
 class CryptographicallySecurePseudoRandomNumberGenerator
 {
@@ -16,26 +38,30 @@ class CryptographicallySecurePseudoRandomNumberGenerator
     {
         import core.sys.windows.windows;
 
-        // REVIEW: Could this result in these data structures overwriting other stuff?
-        // REVIEW: Should I call malloc() before using these pointers to store data?
+        /* NOTE:
+            Question: Should I call malloc() before using these pointers to store data?
+            Answer: I don't believe so, because the memory _should be_ allocated by the
+                loader already. All of the pointers are pointers to functions within the
+                loaded library, so that should not cause a problem, either.
+        */
         private alias BCRYPT_ALG_HANDLE = void*;
         private alias HCRYPTPROV = void*;
         private alias NTSTATUS = uint;
 
         // Used by the Cryptography: Next Generation (CNG) API
-        private HMODULE bcrypt; // A pointer to the loaded Bcrypt library (Bcrypt.dll)
-        private BCRYPT_ALG_HANDLE cngProviderHandle; // A pointer to the CNG Provider Handle, which is used by BCryptGenRandomAddress()
-        private FARPROC bCryptOpenAlgorithmProviderAddress; // A pointer to the BCryptOpenAlgorithmProvider() function, as obtained from this.bcrypt
-        private FARPROC bCryptCloseAlgorithmProviderAddress; // A pointer to the BCryptCloseAlgorithmProvider() function, as obtained from this.bcrypt
-        private FARPROC bCryptGenRandomAddress; // A pointer to the BCryptGenRandom() function, as obtained from this.bcrypt
+        private const HMODULE bcrypt; // A pointer to the loaded Bcrypt library (Bcrypt.dll)
+        private const BCRYPT_ALG_HANDLE cngProviderHandle; // A pointer to the CNG Provider Handle, which is used by BCryptGenRandomAddress()
+        private const FARPROC bCryptOpenAlgorithmProviderAddress; // A pointer to the BCryptOpenAlgorithmProvider() function, as obtained from this.bcrypt
+        private const FARPROC bCryptCloseAlgorithmProviderAddress; // A pointer to the BCryptCloseAlgorithmProvider() function, as obtained from this.bcrypt
+        private const FARPROC bCryptGenRandomAddress; // A pointer to the BCryptGenRandom() function, as obtained from this.bcrypt
 
         // Used by the CryptoAPI and the legacy cryptography API
-        private HMODULE advapi32; // A pointer to the loaded Windows Advanced API (advapi32.dll)
-        private HCRYPTPROV cryptographicServiceProviderHandle; // A pointer to the CSP, which is obtained with CryptoAcquireContext(), and used by CryptGenRandom()
-        private FARPROC cryptAcquireContextAddress; // A pointer to CryptAcquireContext(), as obtained from this.advapi32
-        private FARPROC cryptReleaseContextAddress; // A pointer to CryptReleaseContext(), as obtained from this.advapi32
-        private FARPROC cryptGenRandomAddress; // A pointer to CryptGenRandom(), as obtained from this.advapi32
-        private FARPROC rtlGenRandomAddress; // A pointer to RtlGenRandom(), as obtained from this.advapi32
+        private const HMODULE advapi32; // A pointer to the loaded Windows Advanced API (advapi32.dll)
+        private const HCRYPTPROV cryptographicServiceProviderHandle; // A pointer to the CSP, which is obtained with CryptoAcquireContext(), and used by CryptGenRandom()
+        private const FARPROC cryptAcquireContextAddress; // A pointer to CryptAcquireContext(), as obtained from this.advapi32
+        private const FARPROC cryptReleaseContextAddress; // A pointer to CryptReleaseContext(), as obtained from this.advapi32
+        private const FARPROC cryptGenRandomAddress; // A pointer to CryptGenRandom(), as obtained from this.advapi32
+        private const FARPROC rtlGenRandomAddress; // A pointer to RtlGenRandom(), as obtained from this.advapi32
 
         ///
         public alias isUsingCNGAPI = isUsingCryptographyNextGenerationApplicationProgrammingInterface;
@@ -43,8 +69,21 @@ class CryptographicallySecurePseudoRandomNumberGenerator
         public alias isUsingCryptographyNextGenerationAPI = isUsingCryptographyNextGenerationApplicationProgrammingInterface;
         ///
         public alias isUsingCNGApplicationProgrammingInterface = isUsingCryptographyNextGenerationApplicationProgrammingInterface;
-        ///
-        public @property
+        /**
+            Returns boolean indicating whether this library is using the Windows
+            $(B Cryptography: Next Generation) API to generate random bytes from
+            the $(MONO BCryptGenRandom) API function.
+
+            More specifically, this library returns true if $(MONO Bcrypt.dll) was found,
+            loaded, and all three requisite functions could be loaded from it,
+            which are:
+            $(UL
+                $(LI $(MONO BCryptOpenAlgorithmProvider))
+                $(LI $(MONO BCryptCloseAlgorithmProvider))
+                $(LI $(MONO BCryptGenRandom))
+            )
+        */
+        public @property @safe @nogc nothrow
         bool isUsingCryptographyNextGenerationApplicationProgrammingInterface()
         {
             return
@@ -59,8 +98,21 @@ class CryptographicallySecurePseudoRandomNumberGenerator
 
         ///
         public alias isUsingCryptoAPI = isUsingCryptoApplicationProgrammingInterface;
-        ///
-        public @property
+        /**
+            Returns boolean indicating whether this library is using the Windows
+            $(B Crypto API) to generate random bytes from
+            the $(MONO CryptGenRandom) API function.
+
+            More specifically, this library returns true if $(MONO advapi32.dll) was found,
+            loaded, and all three requisite functions could be loaded from it,
+            which are:
+            $(UL
+                $(LI $(MONO CryptAcquireContext))
+                $(LI $(MONO CryptReleaseContext))
+                $(LI $(MONO CryptGenRandom))
+            )
+        */
+        public @property @safe @nogc nothrow
         bool isUsingCryptoApplicationProgrammingInterface()
         {
             return
@@ -73,8 +125,12 @@ class CryptographicallySecurePseudoRandomNumberGenerator
             );
         }
 
-        ///
-        public @property
+        /**
+            Returns a boolean indicating whether this library was able to load
+            $(MONO advapi32.dll) and $(MONO RtlGenRandom) from it, and will
+            use $(MONO RtlGenRandom) to obtain secure random bytes.
+        */
+        public @property @safe @nogc nothrow
         bool isUsingRtlGenRandom()
         {
             return
@@ -84,9 +140,17 @@ class CryptographicallySecurePseudoRandomNumberGenerator
             );
         }
 
-        ///
+        /**
+            Returns the specified number of cryptographically-secure
+            pseudo-random bytes, using one of the system APIs.
 
-        public
+            Throws:
+            $(UL
+                $(LI $(D CSPRNGException) if one of the functions from the
+                    automatically-select cryptography API could not be loaded.)
+            )
+        */
+        public @system
         void[] getBytes (in size_t length)
         {
             if (this.isUsingCNGAPI)
@@ -123,9 +187,34 @@ class CryptographicallySecurePseudoRandomNumberGenerator
                     return bytes;
             }
 
-            throw new Exception("Could not find a function to generate random bytes!");
+            throw new CSPRNGException
+            (
+                "This exception was thrown because you attempted to generate " ~
+                "cryptographically secure random bytes from the csprng library, " ~
+                "but none of the Windows cryptography APIs could be loaded. " ~
+                "Ensure that either Bcrypt.dll or advapi32.dll is either in " ~
+                "the executable's directory, current directory, the Windows " ~
+                "directory, the System directory, or in one of the directories " ~
+                "in the PATH environment variable. If you believe you have " ~
+                "received this error by mistake, please report this as a bug " ~
+                "to https://github.com/JonathanWilbur/csprng-d/issues."
+            );
         }
 
+        /**
+            The constructor for a CSPRNG. When a $(D CSPRNG) is created with
+            this constructor, the relevant libraries and functions from them are
+            loaded. If they cannot be loaded, the constructor throws a
+            $(D CSPRNGException) and the $(D CSPRNG) will not be created.
+
+            This constructor first attempts to load the Windows
+            Cryptography: Next Generation API. If that cannot be loaded, it
+            attempts to load the CryptoAPI. If that cannot be loaded, it attempts
+            to load the $(MONO RtlGenRandom) function. If all of those fail,
+            the $(D CSPRNGException) is thrown, since no source of
+            cryptographically-secure pseudo-random bytes can be accessed.
+        */
+        public @system
         this ()
         {
             firstTryToUseTheNextGenCryptoAPI:
@@ -161,7 +250,20 @@ class CryptographicallySecurePseudoRandomNumberGenerator
             fallBackOnAdvapi32:
                 this.advapi32 = LoadLibrary("advapi32.dll");
                 if (this.advapi32 == NULL)
-                    throw new Exception("csprng library could not load advapi32.dll. Windows error code: " ~ text(GetLastError()));
+                    throw new CSPRNGException
+                    (
+                        "This exception was thrown because you attempted to generate " ~
+                        "cryptographically secure random bytes from the csprng library, " ~
+                        "but none of the Windows cryptography libraries could be loaded. " ~
+                        "Ensure that either Bcrypt.dll or advapi32.dll is either in " ~
+                        "the executable's directory, current directory, the Windows " ~
+                        "directory, the System directory, or in one of the directories " ~
+                        "in the PATH environment variable. If you believe you have " ~
+                        "received this error by mistake, please report this as a bug " ~
+                        "to https://github.com/JonathanWilbur/csprng-d/issues. The " ~
+                        "Windows error code associated with this particular failure is " ~
+                        text(GetLastError()) ~ "."
+                    );
 
             // This label is never used, but I want it here for visual consistency, anyway.
             fallBackOnCryptGenRandom:
@@ -195,9 +297,30 @@ class CryptographicallySecurePseudoRandomNumberGenerator
             fallBackOnRtlGenRandom:
                 this.rtlGenRandomAddress = GetProcAddress(this.advapi32, "SystemFunction036");
                 if (this.rtlGenRandomAddress == NULL)
-                    throw new Exception("csprng library could not load RtlGenRandom / SystemFunction036 from advapi32.dll. Windows error code: " ~ text(GetLastError()));
+                    throw new CSPRNGException
+                    (
+                        "This exception was thrown because you attempted to generate " ~
+                        "cryptographically secure random bytes from the csprng library, " ~
+                        "but none of the Windows cryptography functions could be loaded " ~
+                        "from advapi32.dll, which was the backup plan, since loading " ~
+                        "Bcrypt.dll failed. " ~
+                        "Ensure that either Bcrypt.dll or advapi32.dll is either in " ~
+                        "the executable's directory, current directory, the Windows " ~
+                        "directory, the System directory, or in one of the directories " ~
+                        "in the PATH environment variable. If you believe you have " ~
+                        "received this error by mistake, please report this as a bug " ~
+                        "to https://github.com/JonathanWilbur/csprng-d/issues. The " ~
+                        "Windows error code associated with this particular failure is " ~
+                        text(GetLastError()) ~ "."
+                    );
         }
 
+        /**
+            Upon deleting the $(D CSPRNG) object, the libraries used are unloaded,
+            and any relevant cryptographic constructs used by those libraries
+            are released.
+        */
+        public @system nothrow
         ~this ()
         {
             if (this.isUsingCNGAPI)
@@ -222,12 +345,17 @@ class CryptographicallySecurePseudoRandomNumberGenerator
     }
     else version (Posix)
     {
-        import std.stdio : File, writeln;
+        import std.stdio : File;
 
+        /// The size of the buffer used to read from $(MONO /dev/random)
         public static immutable size_t readBufferSize = 128u;
-        static File randomFile;
+        private static File randomFile;
 
-        public
+        /**
+            Returns the specified number of cryptographically-secure
+            pseudo-random bytes, using one of the system APIs.
+        */
+        public @system
         void[] getBytes (in size_t length)
         {
             void[] ret;
@@ -242,13 +370,35 @@ class CryptographicallySecurePseudoRandomNumberGenerator
             return ret;
         }
 
+        /**
+            The constructor for a CSPRNG. When a $(D CSPRNG) is created with
+            this constructor, the pseudo-device, $(MONO /dev/random) is opened
+            for reading (not writing). If it cannot be opened, the constructor
+            throws a $(D CSPRNGException) and the $(D CSPRNG) will not be created.
+        */
+        public @safe
         this ()
         {
             this.randomFile = File("/dev/random", "r");
             if (this.randomFile.error())
-                throw new Exception("Could not open /dev/random for reading.");
+                throw new CSPRNGException
+                (
+                    "This exception was thrown because you attempted to generate " ~
+                    "cryptographically secure random bytes from the csprng library, " ~
+                    "but the CSPRNG file, /dev/random, could not be opened for " ~
+                    "reading. If you believe you have received this error by mistake, " ~
+                    "please report this as a bug to " ~
+                    "https://github.com/JonathanWilbur/csprng-d/issues."
+                );
         }
 
+        /**
+            Upon deleting the $(D CSPRNG) object, the file descriptor for the
+            pseudo-device, $(MONO /dev/random) is closed. Note that it is closed
+            in such a way that should not cause problems if it is closed multiple
+            times.
+        */
+        public @safe
         ~this ()
         {
             // Used instead of close() to ensure that other CSPRNGs don't close for all others.
@@ -257,6 +407,12 @@ class CryptographicallySecurePseudoRandomNumberGenerator
     }
     else
     {
-        static assert (0, "Unsupported operating system. Sorry!");
+        static assert
+        (
+            0u,
+            "The csprng library cannot be compiled, because your operating system " ~
+            "is unsupported. The csprng library, currently, can only compile on " ~
+            "Windows, Mac OS X, Linux, and possibly Solaris and the BSDs."
+        );
     }
 }
