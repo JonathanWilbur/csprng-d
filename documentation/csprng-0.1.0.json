@@ -2,8 +2,7 @@
  {
   "name" : "csprng.system",
   "kind" : "module",
-  "file" : ".\\source\\csprng\\system.d",
-  "comment" : "    System sources for randomness.\n",
+  "file" : "./source/csprng/system.d",
   "members" : [
    {
     "name" : "std.conv",
@@ -18,7 +17,6 @@
    {
     "name" : "CSPRNG",
     "kind" : "alias",
-    "comment" : "\n",
     "line" : 10,
     "char" : 8,
     "deco" : "C6csprng6system50CryptographicallySecurePseudoRandomNumberGenerator"
@@ -26,478 +24,76 @@
    {
     "name" : "CryptographicallySecurePseudoRandomNumberGenerator",
     "kind" : "class",
-    "comment" : "\n",
     "line" : 13,
     "char" : 1,
     "members" : [
      {
-      "name" : "core.sys.windows.windows",
+      "name" : "std.stdio",
       "kind" : "import",
-      "line" : 17,
+      "line" : 225,
       "char" : 16,
-      "protection" : "private"
-     },
-     {
-      "name" : "BCRYPT_ALG_HANDLE",
-      "kind" : "alias",
       "protection" : "private",
-      "line" : 21,
-      "char" : 17,
-      "deco" : "Pv"
+      "selective" : [
+       "File",
+       "writeln"
+      ]
      },
      {
-      "name" : "HCRYPTPROV",
-      "kind" : "alias",
-      "protection" : "private",
-      "line" : 22,
-      "char" : 17,
-      "deco" : "Pv"
-     },
-     {
-      "name" : "NTSTATUS",
-      "kind" : "alias",
-      "protection" : "private",
-      "line" : 23,
-      "char" : 17,
-      "deco" : "k"
-     },
-     {
-      "name" : "bcrypt",
+      "name" : "readBufferSize",
       "kind" : "variable",
-      "protection" : "private",
-      "line" : 26,
-      "char" : 25,
-      "deco" : "Pv",
-      "originalType" : "HMODULE",
-      "offset" : 8
+      "line" : 227,
+      "char" : 40,
+      "storageClass" : [
+       "static",
+       "immutable"
+      ],
+      "deco" : "ym",
+      "originalType" : "size_t",
+      "init" : "10LU"
      },
      {
-      "name" : "cngProviderHandle",
+      "name" : "randomFile",
       "kind" : "variable",
-      "protection" : "private",
-      "line" : 27,
-      "char" : 35,
-      "deco" : "Pv",
-      "originalType" : "BCRYPT_ALG_HANDLE",
-      "offset" : 12
-     },
-     {
-      "name" : "bCryptOpenAlgorithmProviderAddress",
-      "kind" : "variable",
-      "protection" : "private",
-      "line" : 28,
-      "char" : 25,
-      "deco" : "PWNbZi",
-      "originalType" : "FARPROC",
-      "offset" : 16
-     },
-     {
-      "name" : "bCryptCloseAlgorithmProviderAddress",
-      "kind" : "variable",
-      "protection" : "private",
-      "line" : 29,
-      "char" : 25,
-      "deco" : "PWNbZi",
-      "originalType" : "FARPROC",
-      "offset" : 20
-     },
-     {
-      "name" : "bCryptGenRandomAddress",
-      "kind" : "variable",
-      "protection" : "private",
-      "line" : 30,
-      "char" : 25,
-      "deco" : "PWNbZi",
-      "originalType" : "FARPROC",
-      "offset" : 24
-     },
-     {
-      "name" : "advapi32",
-      "kind" : "variable",
-      "protection" : "private",
-      "line" : 33,
-      "char" : 25,
-      "deco" : "Pv",
-      "originalType" : "HMODULE",
-      "offset" : 28
-     },
-     {
-      "name" : "cryptographicServiceProviderHandle",
-      "kind" : "variable",
-      "protection" : "private",
-      "line" : 34,
-      "char" : 28,
-      "deco" : "Pv",
-      "originalType" : "HCRYPTPROV",
-      "offset" : 32
-     },
-     {
-      "name" : "cryptAcquireContextAddress",
-      "kind" : "variable",
-      "protection" : "private",
-      "line" : 35,
-      "char" : 25,
-      "deco" : "PWNbZi",
-      "originalType" : "FARPROC",
-      "offset" : 36
-     },
-     {
-      "name" : "cryptReleaseContextAddress",
-      "kind" : "variable",
-      "protection" : "private",
-      "line" : 36,
-      "char" : 25,
-      "deco" : "PWNbZi",
-      "originalType" : "FARPROC",
-      "offset" : 40
-     },
-     {
-      "name" : "cryptGenRandomAddress",
-      "kind" : "variable",
-      "protection" : "private",
-      "line" : 37,
-      "char" : 25,
-      "deco" : "PWNbZi",
-      "originalType" : "FARPROC",
-      "offset" : 44
-     },
-     {
-      "name" : "rtlGenRandomAddress",
-      "kind" : "variable",
-      "protection" : "private",
-      "line" : 38,
-      "char" : 25,
-      "deco" : "PWNbZi",
-      "originalType" : "FARPROC",
-      "offset" : 48
-     },
-     {
-      "name" : "isUsingCNGAPI",
-      "kind" : "alias",
-      "comment" : "\n",
-      "line" : 41,
-      "char" : 16
-     },
-     {
-      "name" : "isUsingCryptographyNextGenerationAPI",
-      "kind" : "alias",
-      "comment" : "\n",
-      "line" : 43,
-      "char" : 16
-     },
-     {
-      "name" : "isUsingCNGApplicationProgrammingInterface",
-      "kind" : "alias",
-      "comment" : "\n",
-      "line" : 45,
-      "char" : 16
-     },
-     {
-      "name" : "isUsingCryptographyNextGenerationApplicationProgrammingInterface",
-      "kind" : "function",
-      "comment" : "\n",
-      "line" : 48,
-      "char" : 14,
-      "deco" : "FNdZb",
-      "endline" : 58,
-      "endchar" : 9
-     },
-     {
-      "name" : "isUsingCryptoAPI",
-      "kind" : "alias",
-      "comment" : "\n",
-      "line" : 61,
-      "char" : 16
-     },
-     {
-      "name" : "isUsingCryptoApplicationProgrammingInterface",
-      "kind" : "function",
-      "comment" : "\n",
-      "line" : 64,
-      "char" : 14,
-      "deco" : "FNdZb",
-      "endline" : 74,
-      "endchar" : 9
-     },
-     {
-      "name" : "isUsingRtlGenRandom",
-      "kind" : "function",
-      "comment" : "\n",
-      "line" : 78,
-      "char" : 14,
-      "deco" : "FNdZb",
-      "endline" : 85,
-      "endchar" : 9
+      "line" : 228,
+      "char" : 21,
+      "storageClass" : [
+       "static"
+      ],
+      "deco" : "S3std5stdio4File"
      },
      {
       "name" : "getBytes",
       "kind" : "function",
-      "comment" : "\n",
-      "line" : 90,
+      "line" : 231,
       "char" : 16,
-      "deco" : "FxkZAv",
+      "deco" : "FxmZAv",
       "originalType" : "void[](in size_t length)",
       "parameters" : [
        {
         "name" : "length",
-        "deco" : "xk"
+        "deco" : "xm"
        }
       ],
-      "endline" : 127,
+      "endline" : 246,
       "endchar" : 9
      },
      {
       "name" : "this",
       "kind" : "constructor",
-      "line" : 129,
+      "line" : 248,
       "char" : 9,
       "deco" : "FZC6csprng6system50CryptographicallySecurePseudoRandomNumberGenerator",
       "originalType" : "()",
-      "endline" : 199,
+      "endline" : 253,
       "endchar" : 9
      },
      {
       "name" : "~this",
       "kind" : "destructor",
-      "line" : 201,
+      "line" : 255,
       "char" : 9,
       "deco" : "FZv",
-      "endline" : 221,
-      "endchar" : 9
-     },
-     {
-      "name" : "core.sys.windows.windows",
-      "kind" : "import",
-      "line" : 17,
-      "char" : 16,
-      "protection" : "private"
-     },
-     {
-      "name" : "BCRYPT_ALG_HANDLE",
-      "kind" : "alias",
-      "protection" : "private",
-      "line" : 21,
-      "char" : 17,
-      "deco" : "Pv"
-     },
-     {
-      "name" : "HCRYPTPROV",
-      "kind" : "alias",
-      "protection" : "private",
-      "line" : 22,
-      "char" : 17,
-      "deco" : "Pv"
-     },
-     {
-      "name" : "NTSTATUS",
-      "kind" : "alias",
-      "protection" : "private",
-      "line" : 23,
-      "char" : 17,
-      "deco" : "k"
-     },
-     {
-      "name" : "bcrypt",
-      "kind" : "variable",
-      "protection" : "private",
-      "line" : 26,
-      "char" : 25,
-      "deco" : "Pv",
-      "originalType" : "HMODULE",
-      "offset" : 8
-     },
-     {
-      "name" : "cngProviderHandle",
-      "kind" : "variable",
-      "protection" : "private",
-      "line" : 27,
-      "char" : 35,
-      "deco" : "Pv",
-      "originalType" : "BCRYPT_ALG_HANDLE",
-      "offset" : 12
-     },
-     {
-      "name" : "bCryptOpenAlgorithmProviderAddress",
-      "kind" : "variable",
-      "protection" : "private",
-      "line" : 28,
-      "char" : 25,
-      "deco" : "PWNbZi",
-      "originalType" : "FARPROC",
-      "offset" : 16
-     },
-     {
-      "name" : "bCryptCloseAlgorithmProviderAddress",
-      "kind" : "variable",
-      "protection" : "private",
-      "line" : 29,
-      "char" : 25,
-      "deco" : "PWNbZi",
-      "originalType" : "FARPROC",
-      "offset" : 20
-     },
-     {
-      "name" : "bCryptGenRandomAddress",
-      "kind" : "variable",
-      "protection" : "private",
-      "line" : 30,
-      "char" : 25,
-      "deco" : "PWNbZi",
-      "originalType" : "FARPROC",
-      "offset" : 24
-     },
-     {
-      "name" : "advapi32",
-      "kind" : "variable",
-      "protection" : "private",
-      "line" : 33,
-      "char" : 25,
-      "deco" : "Pv",
-      "originalType" : "HMODULE",
-      "offset" : 28
-     },
-     {
-      "name" : "cryptographicServiceProviderHandle",
-      "kind" : "variable",
-      "protection" : "private",
-      "line" : 34,
-      "char" : 28,
-      "deco" : "Pv",
-      "originalType" : "HCRYPTPROV",
-      "offset" : 32
-     },
-     {
-      "name" : "cryptAcquireContextAddress",
-      "kind" : "variable",
-      "protection" : "private",
-      "line" : 35,
-      "char" : 25,
-      "deco" : "PWNbZi",
-      "originalType" : "FARPROC",
-      "offset" : 36
-     },
-     {
-      "name" : "cryptReleaseContextAddress",
-      "kind" : "variable",
-      "protection" : "private",
-      "line" : 36,
-      "char" : 25,
-      "deco" : "PWNbZi",
-      "originalType" : "FARPROC",
-      "offset" : 40
-     },
-     {
-      "name" : "cryptGenRandomAddress",
-      "kind" : "variable",
-      "protection" : "private",
-      "line" : 37,
-      "char" : 25,
-      "deco" : "PWNbZi",
-      "originalType" : "FARPROC",
-      "offset" : 44
-     },
-     {
-      "name" : "rtlGenRandomAddress",
-      "kind" : "variable",
-      "protection" : "private",
-      "line" : 38,
-      "char" : 25,
-      "deco" : "PWNbZi",
-      "originalType" : "FARPROC",
-      "offset" : 48
-     },
-     {
-      "name" : "isUsingCNGAPI",
-      "kind" : "alias",
-      "comment" : "\n",
-      "line" : 41,
-      "char" : 16
-     },
-     {
-      "name" : "isUsingCryptographyNextGenerationAPI",
-      "kind" : "alias",
-      "comment" : "\n",
-      "line" : 43,
-      "char" : 16
-     },
-     {
-      "name" : "isUsingCNGApplicationProgrammingInterface",
-      "kind" : "alias",
-      "comment" : "\n",
-      "line" : 45,
-      "char" : 16
-     },
-     {
-      "name" : "isUsingCryptographyNextGenerationApplicationProgrammingInterface",
-      "kind" : "function",
-      "comment" : "\n",
-      "line" : 48,
-      "char" : 14,
-      "deco" : "FNdZb",
-      "endline" : 58,
-      "endchar" : 9
-     },
-     {
-      "name" : "isUsingCryptoAPI",
-      "kind" : "alias",
-      "comment" : "\n",
-      "line" : 61,
-      "char" : 16
-     },
-     {
-      "name" : "isUsingCryptoApplicationProgrammingInterface",
-      "kind" : "function",
-      "comment" : "\n",
-      "line" : 64,
-      "char" : 14,
-      "deco" : "FNdZb",
-      "endline" : 74,
-      "endchar" : 9
-     },
-     {
-      "name" : "isUsingRtlGenRandom",
-      "kind" : "function",
-      "comment" : "\n",
-      "line" : 78,
-      "char" : 14,
-      "deco" : "FNdZb",
-      "endline" : 85,
-      "endchar" : 9
-     },
-     {
-      "name" : "getBytes",
-      "kind" : "function",
-      "comment" : "\n",
-      "line" : 90,
-      "char" : 16,
-      "deco" : "FxkZAv",
-      "originalType" : "void[](in size_t length)",
-      "parameters" : [
-       {
-        "name" : "length",
-        "deco" : "xk"
-       }
-      ],
-      "endline" : 127,
-      "endchar" : 9
-     },
-     {
-      "name" : "this",
-      "kind" : "constructor",
-      "line" : 129,
-      "char" : 9,
-      "deco" : "FZC6csprng6system50CryptographicallySecurePseudoRandomNumberGenerator",
-      "originalType" : "()",
-      "endline" : 199,
-      "endchar" : 9
-     },
-     {
-      "name" : "~this",
-      "kind" : "destructor",
-      "line" : 201,
-      "char" : 9,
-      "deco" : "FZv",
-      "endline" : 221,
+      "endline" : 259,
       "endchar" : 9
      },
      {

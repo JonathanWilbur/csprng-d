@@ -34,7 +34,7 @@ mkdir -p ./build/maps
 mkdir -p ./build/objects
 mkdir -p ./build/scripts
 
-echo $ECHOFLAGS "Building the ASN.1 Library (static)... \c"
+echo $ECHOFLAGS "Building the CSPRNG Library (static)... \c"
 if dmd \
  ./source/macros.ddoc \
  ./source/csprng/*.d \
@@ -53,7 +53,7 @@ else
     echo $ECHOFLAGS "${RED}Failed. See ./build/logs.${NOCOLOR}"
 fi
 
-echo $ECHOFLAGS "Building the ASN.1 Library (shared / dynamic)... \c"
+echo $ECHOFLAGS "Building the CSPRNG Library (shared / dynamic)... \c"
 if dmd \
  ./source/csprng/*.d \
  -of./build/libraries/csprng-${VERSION}.so \

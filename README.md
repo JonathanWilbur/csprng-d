@@ -3,7 +3,7 @@
 * Author: [Jonathan M. Wilbur](https://jonathan.wilbur.space) <[jonathan@wilbur.space](mailto:jonathan@wilbur.space)>
 * Copyright Year: 2018
 * License: [MIT License](https://mit-license.org/)
-* Version: [0.1.0](https://semver.org/)
+* Version: [0.2.0](https://semver.org/)
 
 ## What This Library
 
@@ -28,22 +28,46 @@ For more information on building and installing, see `documentation/install.md`.
 
 ## Library Usage
 
+The usage of this library is really straight-forward. Whether you are on Windows,
+Mac OS X, or Linux, generating cryptographically-secure random bytes looks like
+this:
+
+```d
+import csprng.system;
+CSPRNG c = new CSPRNG();
+writeln(c.getBytes(10)); // Writes ten random bytes to the command line.
+```
+
+On the backend, this library handles opening, caching, and closing file
+descriptors, and efficiently managing the Windows cryptography API constructs,
+so you don't have to!
+
 ## Development
 
 - [ ] Development
-  - [ ] Create `get-cryptobytes` tool.
-  - [ ] Create `get-cryptoseed` tool.
+  - [x] Create `get-cryptobytes` tool.
   - [ ] Support random byte generation through `RDRAND`
-  - [ ] Support random seed generation through `RDSEED`
+  - [ ] Create a better system of exceptions
 - [ ] Documentation
-  - [ ] Create `man` pages for the `get-cryptobytes` tool.
-  - [ ] Create `man` pages for the `get-cryptoseed`
+  - [x] Create `man` pages for the `get-cryptobytes` tool.
+  - [ ] Create `tools.md`
+  - [ ] Create `library.md`
 - [ ] Testing
-  - [ ] Test for uniform distribution of output bytes.
-  - [ ] Test with multiple concurrent CSPRNGs.
   - [ ] Cross-Platform Testing
     - [ ] Windows
-    - [ ] Mac OS X
+    - [x] Mac OS X
+    - [ ] Linux
+  - [x] Test for uniform distribution of output bytes.
+    - [ ] Windows
+    - [x] Mac OS X
+    - [ ] Linux
+  - [x] Test with multiple CSPRNGs.
+    - [ ] Windows
+    - [x] Mac OS X
+    - [ ] Linux
+  - [x] Test with concurrent CSPRNGs.
+    - [ ] Windows
+    - [x] Mac OS X
     - [ ] Linux
   - [ ] CVE Security Review
 

@@ -10,8 +10,10 @@ build/logs/*
 build/objects/*
 documentation/restricted/
 rubbish/
-test/
-./unittest
+unittest
+multiple
+concurrent
+distribution
 
 # General D Ignores
 *.o

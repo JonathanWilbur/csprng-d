@@ -122,7 +122,7 @@ class CryptographicallySecurePseudoRandomNumberGenerator
                 if (RtlGenRandom(bytes.ptr, length))
                     return bytes;
             }
-        
+
             throw new Exception("Could not find a function to generate random bytes!");
         }
 
@@ -222,21 +222,26 @@ class CryptographicallySecurePseudoRandomNumberGenerator
     }
     else version (Posix)
     {
-        import std.stdio : File;
-        
-        static size_t readBufferSize = 1000u;
+        import std.stdio : File, writeln;
+
+        public static immutable size_t readBufferSize = 128u;
         static File randomFile;
 
         public
         void[] getBytes (in size_t length)
         {
             void[] ret;
-            void[this.readBufferSize] readBuffer;
-            while (ret.length < length)
-                ret ~= this.randomFile.rawRead(readBuffer);
+            if (length <= this.readBufferSize)
+                return this.randomFile.rawRead(new void[this.readBufferSize])[0 .. length];
+
+            for (size_t i = 0u; i < (length / this.readBufferSize); i++)
+            {
+                ret ~= this.randomFile.rawRead(new void[this.readBufferSize]);
+            }
+            ret ~= this.randomFile.rawRead(new void[this.readBufferSize])[0 .. (length % this.readBufferSize)];
             return ret;
         }
-    
+
         this ()
         {
             this.randomFile = File("/dev/random", "r");
