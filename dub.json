@@ -1,0 +1,25 @@
+{
+    "name": "csprng",
+    "description": "Cryptographically secure pseudo-random number generation",
+    "authors": [
+        "Jonathan M. Wilbur <jonathan@wilbur.space>"
+    ],
+    "license": "MIT",
+	"homepage": "https://github.com/JonathanWilbur/random-d",
+	"targetType": "library",
+	"importPaths": [
+		"source/"
+	],
+	"sourcePaths": [
+		"source/"
+	],
+    "excludedSourceFiles": [
+		"source/tools/*"
+	],
+	"targetPath": "build/libraries/",
+	"buildRequirements": [
+		"silenceWarnings",
+		"silenceDeprecations",
+		"requireBoundsCheck"
+	]
+}
