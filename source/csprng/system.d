@@ -15,6 +15,28 @@
 module csprng.system;
 private import std.conv : text;
 
+version (CRuntime_Bionic)
+{
+    version = SecureARC4Random;
+}
+else version (OSX)
+{
+    version = SecureARC4Random;
+}
+else version (OpenBSD)
+{
+    version = SecureARC4Random;
+}
+else version (NetBSD)
+{
+    version = SecureARC4Random;
+}
+
+version (SecureARC4Random)
+{
+    private extern (C) void arc4random_buf(scope void* buf, size_t nbytes) @nogc nothrow @system;
+}
+
 ///
 public alias CSPRNGException = CryptographicallySecurePseudoRandomNumberGeneratorException;
 /// A generic CSPRNG exception
@@ -341,6 +363,20 @@ class CryptographicallySecurePseudoRandomNumberGenerator
             {
                 FreeLibrary(this.advapi32);
             }
+        }
+    }
+    else version (SecureARC4Random)
+    {
+        /**
+            Returns the specified number of cryptographically-secure
+            pseudo-random bytes, using one of the system APIs.
+        */
+        public @system
+        void[] getBytes (in size_t length)
+        {
+            void[] ret = new void[length];
+            arc4random_buf(ret.ptr, length);
+            return ret;
         }
     }
     else version (Posix)
