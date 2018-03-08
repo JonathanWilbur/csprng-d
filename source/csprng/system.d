@@ -423,7 +423,7 @@ class CryptographicallySecurePseudoRandomNumberGenerator
 
         /// The size of the buffer used to read from $(MONO /dev/random)
         public static immutable size_t readBufferSize = 128u;
-        private static File randomFile;
+        private File randomFile;
 
         /**
             Returns the specified number of cryptographically-secure
@@ -489,4 +489,22 @@ class CryptographicallySecurePseudoRandomNumberGenerator
             "Windows, Mac OS X, Linux, and possibly Solaris and the BSDs."
         );
     }
+}
+
+// Test that a CSPRNG instance being destroyed doesn't mess up other instances.
+@system unittest
+{
+    CSPRNG csprng1 = new CSPRNG();
+    CSPRNG csprng2 = new CSPRNG();
+    csprng2.destroy();
+    ubyte[] bytes = cast(ubyte[]) csprng1.getBytes(16);
+    assert(bytes.length == 16);
+    bool anySetBits;
+    foreach (b; bytes)
+        if (b)
+        {
+            anySetBits = true;
+            break;
+        }
+    assert(anySetBits, "Either the buffer was not filled or an event of likelihood 2^^-128 occurred.");
 }
