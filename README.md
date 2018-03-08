@@ -12,12 +12,11 @@ CSPRNG, stands for "Cryptographically-Secure Pseudo-Random Number Generator."
 This library relies upon existing system sources for cryptographic randomness.
 
 When compiled on Windows, it uses the `BCryptGenRandom`, `CryptGenRandom`, or
-`RtlGenRandom` system APIs. When compiled on Linux, OpenBSD, or NetBSD, it
-reads random bytes from `/dev/random`. When compiled on Mac OS X, FreeBSD, or
-DragonFlyBSD, it reads random bytes from the `arc4random_buf` function in the
+`RtlGenRandom` system APIs. When compiled on Linux, FreeBSD, or DragonFlyBSD,
+it reads random bytes from `/dev/random`. When compiled on Mac OS X, OpenBSD,
+or NetBSD, it reads random bytes from the `arc4random_buf` function in the
 C runtime library. Regardless of underlying operating system, it resorts to
-the `arc4random_buf` function if the Bionic C Library or uClibc C Library is
-in use.
+the `arc4random_buf` function if the Bionic C Library is in use.
 
 ## Building and Installing
 
