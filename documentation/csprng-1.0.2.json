@@ -1,0 +1,342 @@
+[
+ {
+  "name" : "csprng.system",
+  "kind" : "module",
+  "file" : "./source/csprng/system.d",
+  "members" : [
+   {
+    "name" : "std.conv",
+    "kind" : "import",
+    "line" : 18,
+    "char" : 16,
+    "protection" : "private",
+    "selective" : [
+     "text"
+    ]
+   },
+   {
+    "name" : "arc4random_buf",
+    "kind" : "function",
+    "protection" : "private",
+    "line" : 79,
+    "char" : 29,
+    "linkage" : "c",
+    "deco" : "UNbNiMPvmZv",
+    "originalType" : "nothrow @nogc @system extern (C) void(scope void* buf, size_t nbytes)",
+    "parameters" : [
+     {
+      "name" : "buf",
+      "deco" : "Pv",
+      "storageClass" : [
+       "scope"
+      ]
+     },
+     {
+      "name" : "nbytes",
+      "deco" : "m"
+     }
+    ]
+   },
+   {
+    "name" : "arc4random_buf",
+    "kind" : "function",
+    "protection" : "private",
+    "line" : 79,
+    "char" : 29,
+    "linkage" : "c",
+    "deco" : "UNbNiMPvmZv",
+    "originalType" : "nothrow @nogc @system extern (C) void(scope void* buf, size_t nbytes)",
+    "parameters" : [
+     {
+      "name" : "buf",
+      "deco" : "Pv",
+      "storageClass" : [
+       "scope"
+      ]
+     },
+     {
+      "name" : "nbytes",
+      "deco" : "m"
+     }
+    ]
+   },
+   {
+    "name" : "CSPRNGException",
+    "kind" : "alias",
+    "line" : 83,
+    "char" : 8,
+    "deco" : "C6csprng6system59CryptographicallySecurePseudoRandomNumberGeneratorException"
+   },
+   {
+    "name" : "CryptographicallySecurePseudoRandomNumberGeneratorException",
+    "kind" : "class",
+    "line" : 86,
+    "char" : 1,
+    "base" : "object.Exception",
+    "members" : [
+     {
+      "name" : "std.exception",
+      "kind" : "import",
+      "line" : 88,
+      "char" : 12,
+      "protection" : "private",
+      "selective" : [
+       "basicExceptionCtors"
+      ]
+     },
+     {
+      "name" : "basicExceptionCtors!()",
+      "kind" : "mixin",
+      "line" : 89,
+      "char" : 5
+     }
+    ]
+   },
+   {
+    "name" : "CSPRNG",
+    "kind" : "alias",
+    "line" : 93,
+    "char" : 8,
+    "deco" : "C6csprng6system50CryptographicallySecurePseudoRandomNumberGenerator"
+   },
+   {
+    "name" : "CryptographicallySecurePseudoRandomNumberGenerator",
+    "kind" : "class",
+    "line" : 99,
+    "char" : 1,
+    "members" : [
+     {
+      "name" : "getBytes",
+      "kind" : "function",
+      "line" : 417,
+      "char" : 16,
+      "deco" : "FxmZAv",
+      "originalType" : "@system void[](in size_t length)",
+      "parameters" : [
+       {
+        "name" : "length",
+        "deco" : "xm"
+       }
+      ],
+      "endline" : 422,
+      "endchar" : 9
+     },
+     {
+      "name" : "getBytes",
+      "kind" : "function",
+      "line" : 417,
+      "char" : 16,
+      "deco" : "FxmZAv",
+      "originalType" : "@system void[](in size_t length)",
+      "parameters" : [
+       {
+        "name" : "length",
+        "deco" : "xm"
+       }
+      ],
+      "endline" : 422,
+      "endchar" : 9
+     },
+     {
+      "name" : "core.sys.windows.windows",
+      "kind" : "import",
+      "line" : 103,
+      "char" : 16,
+      "protection" : "private"
+     },
+     {
+      "name" : "BCRYPT_ALG_HANDLE",
+      "kind" : "alias",
+      "line" : 111,
+      "char" : 17,
+      "type" : "void*"
+     },
+     {
+      "name" : "HCRYPTPROV",
+      "kind" : "alias",
+      "line" : 112,
+      "char" : 17,
+      "type" : "void*"
+     },
+     {
+      "name" : "NTSTATUS",
+      "kind" : "alias",
+      "line" : 113,
+      "char" : 17,
+      "deco" : "k"
+     },
+     {
+      "name" : "bcrypt",
+      "kind" : "variable",
+      "line" : 116,
+      "char" : 25,
+      "type" : "HMODULE"
+     },
+     {
+      "name" : "cngProviderHandle",
+      "kind" : "variable",
+      "line" : 117,
+      "char" : 35,
+      "type" : "BCRYPT_ALG_HANDLE"
+     },
+     {
+      "name" : "bCryptOpenAlgorithmProviderAddress",
+      "kind" : "variable",
+      "line" : 118,
+      "char" : 25,
+      "type" : "FARPROC"
+     },
+     {
+      "name" : "bCryptCloseAlgorithmProviderAddress",
+      "kind" : "variable",
+      "line" : 119,
+      "char" : 25,
+      "type" : "FARPROC"
+     },
+     {
+      "name" : "bCryptGenRandomAddress",
+      "kind" : "variable",
+      "line" : 120,
+      "char" : 25,
+      "type" : "FARPROC"
+     },
+     {
+      "name" : "advapi32",
+      "kind" : "variable",
+      "line" : 123,
+      "char" : 25,
+      "type" : "HMODULE"
+     },
+     {
+      "name" : "cryptographicServiceProviderHandle",
+      "kind" : "variable",
+      "line" : 124,
+      "char" : 28,
+      "type" : "HCRYPTPROV"
+     },
+     {
+      "name" : "cryptAcquireContextAddress",
+      "kind" : "variable",
+      "line" : 125,
+      "char" : 25,
+      "type" : "FARPROC"
+     },
+     {
+      "name" : "cryptReleaseContextAddress",
+      "kind" : "variable",
+      "line" : 126,
+      "char" : 25,
+      "type" : "FARPROC"
+     },
+     {
+      "name" : "cryptGenRandomAddress",
+      "kind" : "variable",
+      "line" : 127,
+      "char" : 25,
+      "type" : "FARPROC"
+     },
+     {
+      "name" : "rtlGenRandomAddress",
+      "kind" : "variable",
+      "line" : 128,
+      "char" : 25,
+      "type" : "FARPROC"
+     },
+     {
+      "name" : "isUsingCNGAPI",
+      "kind" : "alias",
+      "line" : 131,
+      "char" : 16,
+      "type" : "isUsingCryptographyNextGenerationApplicationProgrammingInterface"
+     },
+     {
+      "name" : "isUsingCryptographyNextGenerationAPI",
+      "kind" : "alias",
+      "line" : 133,
+      "char" : 16,
+      "type" : "isUsingCryptographyNextGenerationApplicationProgrammingInterface"
+     },
+     {
+      "name" : "isUsingCNGApplicationProgrammingInterface",
+      "kind" : "alias",
+      "line" : 135,
+      "char" : 16,
+      "type" : "isUsingCryptographyNextGenerationApplicationProgrammingInterface"
+     },
+     {
+      "name" : "isUsingCryptographyNextGenerationApplicationProgrammingInterface",
+      "kind" : "function",
+      "line" : 151,
+      "char" : 14,
+      "type" : "nothrow @nogc @property @safe bool()",
+      "endline" : 161,
+      "endchar" : 9
+     },
+     {
+      "name" : "isUsingCryptoAPI",
+      "kind" : "alias",
+      "line" : 164,
+      "char" : 16,
+      "type" : "isUsingCryptoApplicationProgrammingInterface"
+     },
+     {
+      "name" : "isUsingCryptoApplicationProgrammingInterface",
+      "kind" : "function",
+      "line" : 180,
+      "char" : 14,
+      "type" : "nothrow @nogc @property @safe bool()",
+      "endline" : 190,
+      "endchar" : 9
+     },
+     {
+      "name" : "isUsingRtlGenRandom",
+      "kind" : "function",
+      "line" : 198,
+      "char" : 14,
+      "type" : "nothrow @nogc @property @safe bool()",
+      "endline" : 205,
+      "endchar" : 9
+     },
+     {
+      "name" : "getBytes",
+      "kind" : "function",
+      "line" : 218,
+      "char" : 16,
+      "type" : "@system void[](in size_t length)",
+      "parameters" : [
+       {
+        "name" : "length",
+        "type" : "size_t",
+        "storageClass" : [
+         "in"
+        ]
+       }
+      ],
+      "endline" : 266,
+      "endchar" : 9
+     },
+     {
+      "name" : "this",
+      "kind" : "constructor",
+      "line" : 282,
+      "char" : 9,
+      "type" : "@system ()",
+      "endline" : 380,
+      "endchar" : 9
+     },
+     {
+      "name" : "~this",
+      "kind" : "destructor",
+      "line" : 388,
+      "char" : 9,
+      "storageClass" : [
+       "@system"
+      ],
+      "endline" : 408,
+      "endchar" : 9
+     }
+    ]
+   }
+  ]
+ }
+]

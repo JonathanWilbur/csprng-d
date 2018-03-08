@@ -11,7 +11,7 @@ mkdir .\build\maps 2>&1 | Out-Null
 mkdir .\build\objects 2>&1 | Out-Null
 mkdir .\build\scripts 2>&1 | Out-Null
 
-$version = "1.0.0"
+$version = "1.0.2"
 
 Write-Host "Building the CSPRNG Library (static)... " -NoNewLine
 dmd `
