@@ -21,10 +21,6 @@ version (CRuntime_Bionic)
 {
     version = SecureARC4Random;
 }
-else version (CRuntime_UClibc)
-{
-    version = SecureARC4Random;
-}
 
 /* NOTE:
     Why not use $(D arc4random_buf) on FreeBSD or DragonFlyBSD?
