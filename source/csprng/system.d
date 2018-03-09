@@ -423,7 +423,7 @@ class CryptographicallySecurePseudoRandomNumberGenerator
 
         /// The size of the buffer used to read from $(MONO /dev/random)
         public static immutable size_t readBufferSize = 128u;
-        private static File randomFile;
+        private File randomFile;
 
         /**
             Returns the specified number of cryptographically-secure
@@ -432,15 +432,15 @@ class CryptographicallySecurePseudoRandomNumberGenerator
         public @system
         void[] getBytes (in size_t length)
         {
-            void[] ret;
-            if (length <= this.readBufferSize)
-                return this.randomFile.rawRead(new void[this.readBufferSize])[0 .. length];
-
-            for (size_t i = 0u; i < (length / this.readBufferSize); i++)
+            void[] ret = new void[length];
+            size_t pos = 0;
+            while (pos < length)
             {
-                ret ~= this.randomFile.rawRead(new void[this.readBufferSize]);
+                size_t n = length - pos;
+                if (n > this.readBufferSize)
+                    n = this.readBufferSize;
+                pos += this.randomFile.rawRead(ret[pos .. pos + n]).length;
             }
-            ret ~= this.randomFile.rawRead(new void[this.readBufferSize])[0 .. (length % this.readBufferSize)];
             return ret;
         }
 
@@ -489,4 +489,22 @@ class CryptographicallySecurePseudoRandomNumberGenerator
             "Windows, Mac OS X, Linux, and possibly Solaris and the BSDs."
         );
     }
+}
+
+// Test that a CSPRNG instance being destroyed doesn't mess up other instances.
+@system unittest
+{
+    CSPRNG csprng1 = new CSPRNG();
+    CSPRNG csprng2 = new CSPRNG();
+    csprng2.destroy();
+    ubyte[] bytes = cast(ubyte[]) csprng1.getBytes(16);
+    assert(bytes.length == 16);
+    bool anySetBits;
+    foreach (b; bytes)
+        if (b)
+        {
+            anySetBits = true;
+            break;
+        }
+    assert(anySetBits, "Either the buffer was not filled or an event of likelihood 2^^-128 occurred.");
 }
