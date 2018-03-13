@@ -3,7 +3,7 @@
 * Author: [Jonathan M. Wilbur](https://jonathan.wilbur.space) <[jonathan@wilbur.space](mailto:jonathan@wilbur.space)>
 * Copyright Year: 2018
 * License: [MIT License](https://mit-license.org/)
-* Version: [1.0.2](https://semver.org/)
+* Version: [1.0.4](https://semver.org/)
 
 ## What Is This Library?
 
@@ -73,7 +73,7 @@ make:
 ## Special Thanks
 
 Thanks to [Nathan Sashihara](https://github.com/n8sh) ([@n8sh](https://github.com/n8sh))
-for adding support for the use of `arc4random_buf`.
+for adding support for the use of `arc4random_buf`, and finding a few bugs as well.
 
 ## Notes
 

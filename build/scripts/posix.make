@@ -15,7 +15,7 @@ vpath %.a ./build/libraries
 vpath %.so ./build/libraries
 vpath % ./build/executables
 
-version = 1.0.2
+version = 1.0.4
 
 modules = system
 sources = $(addsuffix .d,$(modules))

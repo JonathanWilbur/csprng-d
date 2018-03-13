@@ -423,7 +423,8 @@ class CryptographicallySecurePseudoRandomNumberGenerator
 
         /// The size of the buffer used to read from $(MONO /dev/random)
         public static immutable size_t readBufferSize = 128u;
-        private File randomFile;
+        private static File randomFile;
+        private static size_t openInstances;
 
         /**
             Returns the specified number of cryptographically-secure
@@ -453,7 +454,9 @@ class CryptographicallySecurePseudoRandomNumberGenerator
         public @safe
         this ()
         {
-            this.randomFile = File("/dev/random", "r");
+            scope(success) this.openInstances++;
+            if (!this.randomFile.isOpen())
+                this.randomFile = File("/dev/random", "r");
             if (this.randomFile.error())
                 throw new CSPRNGException
                 (
@@ -475,8 +478,15 @@ class CryptographicallySecurePseudoRandomNumberGenerator
         public @safe
         ~this ()
         {
-            // Used instead of close() to ensure that other CSPRNGs don't close for all others.
-            this.randomFile.detach();
+            scope(exit) this.openInstances--;
+            if (this.openInstances == 0u)
+                this.randomFile.detach();
+        }
+
+        invariant
+        {
+            if (this.openInstances > 0u)
+                assert(this.randomFile.isOpen());
         }
     }
     else
@@ -491,15 +501,28 @@ class CryptographicallySecurePseudoRandomNumberGenerator
     }
 }
 
-// Test that a CSPRNG instance being destroyed doesn't mess up other instances.
-@system unittest
+/*
+    Test that one CSPRNG instance being destroyed doesn't adversely affect
+    other instances.
+*/
+@system
+unittest
 {
     CSPRNG csprng1 = new CSPRNG();
     CSPRNG csprng2 = new CSPRNG();
     csprng2.destroy();
+
+    /*
+        If csprng.randomFile is closed here, the program will crash with a
+        segmentation fault. I don't know of a better way to test this.
+    */
     ubyte[] bytes = cast(ubyte[]) csprng1.getBytes(16);
+
+    // Ensure the CSPRNG did not just silently fail and output insufficient bytes.
     assert(bytes.length == 16);
-    bool anySetBits;
+
+    // Ensure the output bytes are actually random, and not just null bytes.
+    bool anySetBits = false;
     foreach (b; bytes)
         if (b)
         {
@@ -507,4 +530,98 @@ class CryptographicallySecurePseudoRandomNumberGenerator
             break;
         }
     assert(anySetBits, "Either the buffer was not filled or an event of likelihood 2^^-128 occurred.");
+}
+
+// Test that multi-threaded use of CSPRNG does not crash or cause errors.
+@system
+unittest
+{
+    void multithreadedTest (in size_t threadsToUseInTest, in size_t bytesToAppendInEachThread)
+    {
+        import std.stdio : writeln;
+        import std.concurrency : spawn;
+        import std.algorithm.searching : all;
+        shared ubyte[] output = [];
+        shared bool[] threadsDone = [];
+        threadsDone.length = threadsToUseInTest;
+
+        for (size_t i = 0u; i < threadsToUseInTest; i++)
+        {
+            spawn
+            (
+                function void
+                (
+                    size_t _threadIndex,
+                    shared bool[]* _threadsDone,
+                    shared ubyte[]* _output,
+                    size_t _bytesToAppendInEachThread,
+                )
+                {
+                    CSPRNG c = new CSPRNG();
+                    synchronized {
+                        *_output ~= cast(ubyte[]) c.getBytes(_bytesToAppendInEachThread);
+                        (*_threadsDone)[_threadIndex] = true;
+                    }
+
+                    /* NOTE
+                        I tried to make this test destroy every other CSPRNG manually,
+                        but for some reason, that caused an InvalidMemoryOperationError.
+                        So for now, this has to destroy every CSPRNG.
+                    */
+                    // if (_threadIndex % 2u)
+                    c.destroy();
+                },
+                i, &threadsDone, &output, bytesToAppendInEachThread
+            );
+        }
+
+        while (!all(threadsDone)) {}
+
+        // Ensure the CSPRNG did not just silently fail and output insufficient bytes.
+        assert(output.length == (threadsToUseInTest * bytesToAppendInEachThread));
+
+        // Ensure the output bytes are actually random, and not just null bytes.
+        bool anySetBits = false;
+        foreach (b; output)
+            if (b)
+            {
+                anySetBits = true;
+                break;
+            }
+        assert(anySetBits, "Buffer was not filled with random bytes!");
+
+        /*
+            Ensure that there are not peculiar repeats of the same bytes.
+            This could--hypothetically--be a problem when multiple
+            threads are reading from the same single source of random
+            bytes.
+        */
+        if (bytesToAppendInEachThread > 4u)
+        {
+            import std.algorithm.searching : canFind;
+            for (int i = 0; i < (output.length - 4u); i++)
+            {
+                assert(!canFind(output[i+1 .. $], output[i .. i+4]));
+            }
+        }
+    }
+
+    version (SecureARC4Random)
+    {
+        multithreadedTest(10u, 5u); // Small number of threads, small reads
+        multithreadedTest(10u, 500u); // Small number of threads, large reads
+        multithreadedTest(100u, 5u); // Large number of threads, small reads
+    }
+    else version (Posix)
+    {
+        multithreadedTest(10u, CSPRNG.readBufferSize / 2u); // Reads smaller than readBufferSize
+        multithreadedTest(10u, CSPRNG.readBufferSize * 5u); // Reads larger than readBufferSize
+        multithreadedTest(100u, CSPRNG.readBufferSize / 2u); // Large number of threads, small reads
+    }
+    else
+    {
+        multithreadedTest(10u, 5u); // Small number of threads, small reads
+        multithreadedTest(10u, 500u); // Small number of threads, large reads
+        multithreadedTest(100u, 5u); // Large number of threads, small reads
+    }
 }
