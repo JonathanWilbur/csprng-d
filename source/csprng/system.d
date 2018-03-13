@@ -94,6 +94,8 @@ public alias CSPRNG = CryptographicallySecurePseudoRandomNumberGenerator;
 public
 class CryptographicallySecurePseudoRandomNumberGenerator
 {
+    import std.traits : ForeachType, isNumeric, isStaticArray, Unqual;
+
     version (Windows)
     {
         import core.sys.windows.windows;
@@ -499,6 +501,34 @@ class CryptographicallySecurePseudoRandomNumberGenerator
             "Windows, Mac OS X, Linux, and possibly Solaris and the BSDs."
         );
     }
+
+    public @system
+    T get(T)()
+    if (isNumeric!(Unqual!T) || (isStaticArray!T && isNumeric!(Unqual!(ForeachType!T))))
+    {
+        ubyte[] ret = cast(ubyte[]) this.getBytes(T.sizeof);
+        return *(cast(T*) ret.ptr);
+    }
+
+    @system
+    unittest
+    {
+        assert(__traits(compiles, (new CSPRNG()).get!byte()));
+        assert(__traits(compiles, (new CSPRNG()).get!ubyte()));
+        assert(__traits(compiles, (new CSPRNG()).get!short()));
+        assert(__traits(compiles, (new CSPRNG()).get!ushort()));
+        assert(__traits(compiles, (new CSPRNG()).get!int()));
+        assert(__traits(compiles, (new CSPRNG()).get!uint()));
+        assert(__traits(compiles, (new CSPRNG()).get!long()));
+        assert(__traits(compiles, (new CSPRNG()).get!ulong()));
+        assert(__traits(compiles, (new CSPRNG()).get!size_t()));
+        assert(__traits(compiles, (new CSPRNG()).get!ptrdiff_t()));
+        assert(__traits(compiles, (new CSPRNG()).get!float()));
+        assert(__traits(compiles, (new CSPRNG()).get!double()));
+        assert(__traits(compiles, (new CSPRNG()).get!real()));
+        assert(__traits(compiles, (new CSPRNG()).get!(ubyte[4])()));
+        assert(__traits(compiles, (new CSPRNG()).get!(float[6])()));
+    }
 }
 
 /*
@@ -538,7 +568,6 @@ unittest
 {
     void multithreadedTest (in size_t threadsToUseInTest, in size_t bytesToAppendInEachThread)
     {
-        import std.stdio : writeln;
         import std.concurrency : spawn;
         import std.algorithm.searching : all;
         shared ubyte[] output = [];

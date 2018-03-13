@@ -3,7 +3,7 @@
 * Author: [Jonathan M. Wilbur](https://jonathan.wilbur.space) <[jonathan@wilbur.space](mailto:jonathan@wilbur.space)>
 * Copyright Year: 2018
 * License: [MIT License](https://mit-license.org/)
-* Version: [1.0.4](https://semver.org/)
+* Version: [1.1.0](https://semver.org/)
 
 ## What Is This Library?
 
@@ -43,6 +43,15 @@ CSPRNG c = new CSPRNG();
 writeln(c.getBytes(10)); // Writes ten random bytes to the command line.
 ```
 
+Alternatively, you can get random numeric data types, including static arrays
+of numeric types like so:
+
+```d
+import csprng.system;
+CSPRNG c = new CSPRNG();
+writeln(c.get!(int[4])()); // Writes an int[4] where each int is random.
+```
+
 On the backend, this library handles opening, caching, and closing file
 descriptors, and efficiently managing the Windows cryptography API constructs,
 so you don't have to!
@@ -66,7 +75,7 @@ It takes only a single argument, specifying the number of random bytes wanted.
 Though this library is ready for production, there are a few changes I plan to
 make:
 
-- [ ] Implement a `get` templated method that retrieves a random equivalent of any parameterized integral data type.
+- [x] Implement a `get` templated method that retrieves a random equivalent of any parameterized numeric data type.
 - [ ] Make `SecureARC4Random` implementations fall back on `/dev/random` if `SecureARC4Random` is not present.
 - [ ] At least include assembly files for `RDRAND`.
 

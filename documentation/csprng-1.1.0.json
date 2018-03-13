@@ -106,9 +106,22 @@
     "char" : 1,
     "members" : [
      {
+      "name" : "std.traits",
+      "kind" : "import",
+      "line" : 97,
+      "char" : 12,
+      "protection" : "private",
+      "selective" : [
+       "ForeachType",
+       "isNumeric",
+       "isStaticArray",
+       "Unqual"
+      ]
+     },
+     {
       "name" : "getBytes",
       "kind" : "function",
-      "line" : 413,
+      "line" : 415,
       "char" : 16,
       "deco" : "FxmZAv",
       "originalType" : "@system void[](in size_t length)",
@@ -118,13 +131,13 @@
         "deco" : "xm"
        }
       ],
-      "endline" : 418,
+      "endline" : 420,
       "endchar" : 9
      },
      {
       "name" : "getBytes",
       "kind" : "function",
-      "line" : 413,
+      "line" : 415,
       "char" : 16,
       "deco" : "FxmZAv",
       "originalType" : "@system void[](in size_t length)",
@@ -134,173 +147,173 @@
         "deco" : "xm"
        }
       ],
-      "endline" : 418,
+      "endline" : 420,
       "endchar" : 9
      },
      {
       "name" : "core.sys.windows.windows",
       "kind" : "import",
-      "line" : 99,
+      "line" : 101,
       "char" : 16,
       "protection" : "private"
      },
      {
       "name" : "BCRYPT_ALG_HANDLE",
       "kind" : "alias",
-      "line" : 107,
+      "line" : 109,
       "char" : 17,
       "type" : "void*"
      },
      {
       "name" : "HCRYPTPROV",
       "kind" : "alias",
-      "line" : 108,
+      "line" : 110,
       "char" : 17,
       "type" : "void*"
      },
      {
       "name" : "NTSTATUS",
       "kind" : "alias",
-      "line" : 109,
+      "line" : 111,
       "char" : 17,
       "deco" : "k"
      },
      {
       "name" : "bcrypt",
       "kind" : "variable",
-      "line" : 112,
+      "line" : 114,
       "char" : 25,
       "type" : "HMODULE"
      },
      {
       "name" : "cngProviderHandle",
       "kind" : "variable",
-      "line" : 113,
+      "line" : 115,
       "char" : 35,
       "type" : "BCRYPT_ALG_HANDLE"
      },
      {
       "name" : "bCryptOpenAlgorithmProviderAddress",
       "kind" : "variable",
-      "line" : 114,
+      "line" : 116,
       "char" : 25,
       "type" : "FARPROC"
      },
      {
       "name" : "bCryptCloseAlgorithmProviderAddress",
       "kind" : "variable",
-      "line" : 115,
+      "line" : 117,
       "char" : 25,
       "type" : "FARPROC"
      },
      {
       "name" : "bCryptGenRandomAddress",
       "kind" : "variable",
-      "line" : 116,
+      "line" : 118,
       "char" : 25,
       "type" : "FARPROC"
      },
      {
       "name" : "advapi32",
       "kind" : "variable",
-      "line" : 119,
+      "line" : 121,
       "char" : 25,
       "type" : "HMODULE"
      },
      {
       "name" : "cryptographicServiceProviderHandle",
       "kind" : "variable",
-      "line" : 120,
+      "line" : 122,
       "char" : 28,
       "type" : "HCRYPTPROV"
      },
      {
       "name" : "cryptAcquireContextAddress",
       "kind" : "variable",
-      "line" : 121,
+      "line" : 123,
       "char" : 25,
       "type" : "FARPROC"
      },
      {
       "name" : "cryptReleaseContextAddress",
       "kind" : "variable",
-      "line" : 122,
+      "line" : 124,
       "char" : 25,
       "type" : "FARPROC"
      },
      {
       "name" : "cryptGenRandomAddress",
       "kind" : "variable",
-      "line" : 123,
+      "line" : 125,
       "char" : 25,
       "type" : "FARPROC"
      },
      {
       "name" : "rtlGenRandomAddress",
       "kind" : "variable",
-      "line" : 124,
+      "line" : 126,
       "char" : 25,
       "type" : "FARPROC"
      },
      {
       "name" : "isUsingCNGAPI",
       "kind" : "alias",
-      "line" : 127,
+      "line" : 129,
       "char" : 16,
       "type" : "isUsingCryptographyNextGenerationApplicationProgrammingInterface"
      },
      {
       "name" : "isUsingCryptographyNextGenerationAPI",
       "kind" : "alias",
-      "line" : 129,
+      "line" : 131,
       "char" : 16,
       "type" : "isUsingCryptographyNextGenerationApplicationProgrammingInterface"
      },
      {
       "name" : "isUsingCNGApplicationProgrammingInterface",
       "kind" : "alias",
-      "line" : 131,
+      "line" : 133,
       "char" : 16,
       "type" : "isUsingCryptographyNextGenerationApplicationProgrammingInterface"
      },
      {
       "name" : "isUsingCryptographyNextGenerationApplicationProgrammingInterface",
       "kind" : "function",
-      "line" : 147,
+      "line" : 149,
       "char" : 14,
       "type" : "nothrow @nogc @property @safe bool()",
-      "endline" : 157,
+      "endline" : 159,
       "endchar" : 9
      },
      {
       "name" : "isUsingCryptoAPI",
       "kind" : "alias",
-      "line" : 160,
+      "line" : 162,
       "char" : 16,
       "type" : "isUsingCryptoApplicationProgrammingInterface"
      },
      {
       "name" : "isUsingCryptoApplicationProgrammingInterface",
       "kind" : "function",
-      "line" : 176,
+      "line" : 178,
       "char" : 14,
       "type" : "nothrow @nogc @property @safe bool()",
-      "endline" : 186,
+      "endline" : 188,
       "endchar" : 9
      },
      {
       "name" : "isUsingRtlGenRandom",
       "kind" : "function",
-      "line" : 194,
+      "line" : 196,
       "char" : 14,
       "type" : "nothrow @nogc @property @safe bool()",
-      "endline" : 201,
+      "endline" : 203,
       "endchar" : 9
      },
      {
       "name" : "getBytes",
       "kind" : "function",
-      "line" : 214,
+      "line" : 216,
       "char" : 16,
       "type" : "@system void[](in size_t length)",
       "parameters" : [
@@ -312,51 +325,86 @@
         ]
        }
       ],
-      "endline" : 262,
+      "endline" : 264,
       "endchar" : 9
      },
      {
       "name" : "this",
       "kind" : "constructor",
-      "line" : 278,
+      "line" : 280,
       "char" : 9,
       "type" : "@system ()",
-      "endline" : 376,
+      "endline" : 378,
       "endchar" : 9
      },
      {
       "name" : "~this",
       "kind" : "destructor",
-      "line" : 384,
+      "line" : 386,
       "char" : 9,
       "storageClass" : [
        "@system"
       ],
-      "endline" : 404,
+      "endline" : 406,
       "endchar" : 9
+     },
+     {
+      "kind" : "template",
+      "line" : 506,
+      "char" : 7,
+      "name" : "get",
+      "parameters" : [
+       {
+        "name" : "T",
+        "kind" : "type"
+       }
+      ],
+      "constraint" : "isNumeric!(Unqual!T) || isStaticArray!T && isNumeric!(Unqual!(ForeachType!T))",
+      "members" : [
+       {
+        "name" : "get",
+        "kind" : "function",
+        "line" : 506,
+        "char" : 7,
+        "type" : "@system T()",
+        "endline" : 511,
+        "endchar" : 5
+       }
+      ]
+     },
+     {
+      "name" : "__unittest_L514_C5",
+      "kind" : "function",
+      "line" : 514,
+      "char" : 5,
+      "storageClass" : [
+       "@system"
+      ],
+      "endline" : 532,
+      "endchar" : 1
      }
     ]
    },
    {
-    "name" : "__unittest_L509_C1",
+    "name" : "__unittest_L539_C1",
     "kind" : "function",
-    "line" : 509,
+    "line" : 539,
     "char" : 1,
     "storageClass" : [
      "@system"
     ],
-    "endline" : 536,
+    "endline" : 566,
     "endchar" : 1
    },
    {
-    "name" : "__unittest_L537_C1",
+    "name" : "__unittest_L567_C1",
     "kind" : "function",
-    "line" : 537,
+    "line" : 567,
     "char" : 1,
     "storageClass" : [
      "@system"
     ],
-    "endline" : 627,
+    "endline" : 656,
     "endchar" : 2
    }
   ]
