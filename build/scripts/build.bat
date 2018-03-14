@@ -12,7 +12,7 @@ mkdir .\build\maps > nul 2>&1
 mkdir .\build\objects > nul 2>&1
 mkdir .\build\scripts > nul 2>&1
 
-set version="1.1.0"
+set version="1.1.1"
 
 echo|set /p="Building the CSPRNG Library (static)... "
 dmd ^

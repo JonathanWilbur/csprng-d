@@ -1,0 +1,707 @@
+[
+ {
+  "name" : "csprng.system",
+  "kind" : "module",
+  "file" : ".\\source\\csprng\\system.d",
+  "comment" : "    A Cryptographically-Secure Pseudo-Random Number Generator that uses system\n    APIs as its source of secure random bytes. In the case of Windows, it uses\n    the $(MONO BCryptGenRandom), $(MONO CryptGenRandom), and $(MONO RtlGenRandom)\n    libraries in that order of fallback. On POSIX-ish systems, it uses the\n    pseudo-device, $(MONO /dev/random), as its source of secure random bytes.\n\n    \"ARC4\" is a trademark of $(LINK https://www.rsa.com/, RSA Laboratories).\n\n    Authors:\n    $(UL\n        $(LI $(PERSON Jonathan M. Wilbur, jonathan@wilbur.space, http://jonathan.wilbur.space))\n    )\n    Copyright: Copyright (C) Jonathan M. Wilbur\n    License: $(LINK https://mit-license.org/, MIT License)\n",
+  "members" : [
+   {
+    "name" : "std.conv",
+    "kind" : "import",
+    "line" : 18,
+    "char" : 16,
+    "protection" : "private",
+    "selective" : [
+     "text"
+    ]
+   },
+   {
+    "name" : "arc4random_buf",
+    "kind" : "function",
+    "line" : 75,
+    "char" : 29,
+    "type" : "nothrow @nogc @system extern (C) void(scope void* buf, size_t nbytes)",
+    "parameters" : [
+     {
+      "name" : "buf",
+      "type" : "void*",
+      "storageClass" : [
+       "scope"
+      ]
+     },
+     {
+      "name" : "nbytes",
+      "type" : "size_t"
+     }
+    ]
+   },
+   {
+    "name" : "CSPRNGException",
+    "kind" : "alias",
+    "comment" : "\n",
+    "line" : 79,
+    "char" : 8,
+    "deco" : "C6csprng6system59CryptographicallySecurePseudoRandomNumberGeneratorException"
+   },
+   {
+    "name" : "CryptographicallySecurePseudoRandomNumberGeneratorException",
+    "kind" : "class",
+    "comment" : "A generic CSPRNG exception\n",
+    "line" : 82,
+    "char" : 1,
+    "base" : "object.Exception",
+    "members" : [
+     {
+      "name" : "std.exception",
+      "kind" : "import",
+      "line" : 84,
+      "char" : 12,
+      "protection" : "private",
+      "selective" : [
+       "basicExceptionCtors"
+      ]
+     },
+     {
+      "name" : "basicExceptionCtors!()",
+      "kind" : "mixin",
+      "line" : 85,
+      "char" : 5
+     }
+    ]
+   },
+   {
+    "name" : "CSPRNG",
+    "kind" : "alias",
+    "comment" : "\n",
+    "line" : 89,
+    "char" : 8,
+    "deco" : "C6csprng6system50CryptographicallySecurePseudoRandomNumberGenerator"
+   },
+   {
+    "name" : "CryptographicallySecurePseudoRandomNumberGenerator",
+    "kind" : "class",
+    "comment" : "    The class that wraps the system's CSPRNG APIs, making it easy to\n    retrieve cryptographically-secure pseudo-random bytes.\n",
+    "line" : 95,
+    "char" : 1,
+    "members" : [
+     {
+      "name" : "std.traits",
+      "kind" : "import",
+      "line" : 97,
+      "char" : 12,
+      "protection" : "private",
+      "selective" : [
+       "ForeachType",
+       "isNumeric",
+       "isStaticArray",
+       "Unqual"
+      ]
+     },
+     {
+      "name" : "core.sys.windows.windows",
+      "kind" : "import",
+      "line" : 101,
+      "char" : 16,
+      "protection" : "private"
+     },
+     {
+      "name" : "openInstances",
+      "kind" : "variable",
+      "protection" : "private",
+      "line" : 103,
+      "char" : 31,
+      "storageClass" : [
+       "static"
+      ],
+      "deco" : "k",
+      "originalType" : "size_t"
+     },
+     {
+      "name" : "BCRYPT_ALG_HANDLE",
+      "kind" : "alias",
+      "protection" : "private",
+      "line" : 110,
+      "char" : 17,
+      "deco" : "Pv"
+     },
+     {
+      "name" : "HCRYPTPROV",
+      "kind" : "alias",
+      "protection" : "private",
+      "line" : 111,
+      "char" : 17,
+      "deco" : "Pv"
+     },
+     {
+      "name" : "NTSTATUS",
+      "kind" : "alias",
+      "protection" : "private",
+      "line" : 112,
+      "char" : 17,
+      "deco" : "k"
+     },
+     {
+      "name" : "bcrypt",
+      "kind" : "variable",
+      "protection" : "private",
+      "line" : 115,
+      "char" : 32,
+      "storageClass" : [
+       "static"
+      ],
+      "deco" : "Pv",
+      "originalType" : "HMODULE"
+     },
+     {
+      "name" : "cngProviderHandle",
+      "kind" : "variable",
+      "protection" : "private",
+      "line" : 116,
+      "char" : 42,
+      "storageClass" : [
+       "static"
+      ],
+      "deco" : "Pv",
+      "originalType" : "BCRYPT_ALG_HANDLE"
+     },
+     {
+      "name" : "bCryptOpenAlgorithmProviderAddress",
+      "kind" : "variable",
+      "protection" : "private",
+      "line" : 117,
+      "char" : 32,
+      "storageClass" : [
+       "static"
+      ],
+      "deco" : "PWNbZi",
+      "originalType" : "FARPROC"
+     },
+     {
+      "name" : "bCryptCloseAlgorithmProviderAddress",
+      "kind" : "variable",
+      "protection" : "private",
+      "line" : 118,
+      "char" : 32,
+      "storageClass" : [
+       "static"
+      ],
+      "deco" : "PWNbZi",
+      "originalType" : "FARPROC"
+     },
+     {
+      "name" : "bCryptGenRandomAddress",
+      "kind" : "variable",
+      "protection" : "private",
+      "line" : 119,
+      "char" : 32,
+      "storageClass" : [
+       "static"
+      ],
+      "deco" : "PWNbZi",
+      "originalType" : "FARPROC"
+     },
+     {
+      "name" : "advapi32",
+      "kind" : "variable",
+      "protection" : "private",
+      "line" : 122,
+      "char" : 32,
+      "storageClass" : [
+       "static"
+      ],
+      "deco" : "Pv",
+      "originalType" : "HMODULE"
+     },
+     {
+      "name" : "cryptographicServiceProviderHandle",
+      "kind" : "variable",
+      "protection" : "private",
+      "line" : 123,
+      "char" : 35,
+      "storageClass" : [
+       "static"
+      ],
+      "deco" : "Pv",
+      "originalType" : "HCRYPTPROV"
+     },
+     {
+      "name" : "cryptAcquireContextAddress",
+      "kind" : "variable",
+      "protection" : "private",
+      "line" : 124,
+      "char" : 32,
+      "storageClass" : [
+       "static"
+      ],
+      "deco" : "PWNbZi",
+      "originalType" : "FARPROC"
+     },
+     {
+      "name" : "cryptReleaseContextAddress",
+      "kind" : "variable",
+      "protection" : "private",
+      "line" : 125,
+      "char" : 32,
+      "storageClass" : [
+       "static"
+      ],
+      "deco" : "PWNbZi",
+      "originalType" : "FARPROC"
+     },
+     {
+      "name" : "cryptGenRandomAddress",
+      "kind" : "variable",
+      "protection" : "private",
+      "line" : 126,
+      "char" : 32,
+      "storageClass" : [
+       "static"
+      ],
+      "deco" : "PWNbZi",
+      "originalType" : "FARPROC"
+     },
+     {
+      "name" : "rtlGenRandomAddress",
+      "kind" : "variable",
+      "protection" : "private",
+      "line" : 127,
+      "char" : 32,
+      "storageClass" : [
+       "static"
+      ],
+      "deco" : "PWNbZi",
+      "originalType" : "FARPROC"
+     },
+     {
+      "name" : "isUsingCNGAPI",
+      "kind" : "alias",
+      "comment" : "\n",
+      "line" : 130,
+      "char" : 16
+     },
+     {
+      "name" : "isUsingCryptographyNextGenerationAPI",
+      "kind" : "alias",
+      "comment" : "\n",
+      "line" : 132,
+      "char" : 16
+     },
+     {
+      "name" : "isUsingCNGApplicationProgrammingInterface",
+      "kind" : "alias",
+      "comment" : "\n",
+      "line" : 134,
+      "char" : 16
+     },
+     {
+      "name" : "isUsingCryptographyNextGenerationApplicationProgrammingInterface",
+      "kind" : "function",
+      "comment" : "            Returns boolean indicating whether this library is using the Windows\n            $(B Cryptography: Next Generation) API to generate random bytes from\n            the $(MONO BCryptGenRandom) API function.\n\n            More specifically, this library returns true if $(MONO Bcrypt.dll) was found,\n            loaded, and all three requisite functions could be loaded from it,\n            which are:\n            $(UL\n                $(LI $(MONO BCryptOpenAlgorithmProvider))\n                $(LI $(MONO BCryptCloseAlgorithmProvider))\n                $(LI $(MONO BCryptGenRandom))\n            )\n",
+      "line" : 150,
+      "char" : 14,
+      "deco" : "FNbNdNiNfZb",
+      "endline" : 160,
+      "endchar" : 9
+     },
+     {
+      "name" : "isUsingCryptoAPI",
+      "kind" : "alias",
+      "comment" : "\n",
+      "line" : 163,
+      "char" : 16
+     },
+     {
+      "name" : "isUsingCryptoApplicationProgrammingInterface",
+      "kind" : "function",
+      "comment" : "            Returns boolean indicating whether this library is using the Windows\n            $(B Crypto API) to generate random bytes from\n            the $(MONO CryptGenRandom) API function.\n\n            More specifically, this library returns true if $(MONO advapi32.dll) was found,\n            loaded, and all three requisite functions could be loaded from it,\n            which are:\n            $(UL\n                $(LI $(MONO CryptAcquireContext))\n                $(LI $(MONO CryptReleaseContext))\n                $(LI $(MONO CryptGenRandom))\n            )\n",
+      "line" : 179,
+      "char" : 14,
+      "deco" : "FNbNdNiNfZb",
+      "endline" : 189,
+      "endchar" : 9
+     },
+     {
+      "name" : "isUsingRtlGenRandom",
+      "kind" : "function",
+      "comment" : "            Returns a boolean indicating whether this library was able to load\n            $(MONO advapi32.dll) and $(MONO RtlGenRandom) from it, and will\n            use $(MONO RtlGenRandom) to obtain secure random bytes.\n",
+      "line" : 197,
+      "char" : 14,
+      "deco" : "FNbNdNiNfZb",
+      "endline" : 204,
+      "endchar" : 9
+     },
+     {
+      "name" : "getBytes",
+      "kind" : "function",
+      "comment" : "            Returns the specified number of cryptographically-secure\n            pseudo-random bytes, using one of the system APIs.\n\n            Throws:\n            $(UL\n                $(LI $(D CSPRNGException) if one of the functions from the\n                    automatically-select cryptography API could not be loaded.)\n            )\n",
+      "line" : 217,
+      "char" : 16,
+      "deco" : "FxkZAv",
+      "originalType" : "@system void[](in size_t length)",
+      "parameters" : [
+       {
+        "name" : "length",
+        "deco" : "xk"
+       }
+      ],
+      "endline" : 265,
+      "endchar" : 9
+     },
+     {
+      "name" : "this",
+      "kind" : "constructor",
+      "comment" : "            The constructor for a CSPRNG. When a $(D CSPRNG) is created with\n            this constructor, the relevant libraries and functions from them are\n            loaded. If they cannot be loaded, the constructor throws a\n            $(D CSPRNGException) and the $(D CSPRNG) will not be created.\n\n            This constructor first attempts to load the Windows\n            Cryptography: Next Generation API. If that cannot be loaded, it\n            attempts to load the CryptoAPI. If that cannot be loaded, it attempts\n            to load the $(MONO RtlGenRandom) function. If all of those fail,\n            the $(D CSPRNGException) is thrown, since no source of\n            cryptographically-secure pseudo-random bytes can be accessed.\n",
+      "line" : 281,
+      "char" : 9,
+      "deco" : "FZC6csprng6system50CryptographicallySecurePseudoRandomNumberGenerator",
+      "originalType" : "@system ()",
+      "endline" : 381,
+      "endchar" : 9
+     },
+     {
+      "name" : "~this",
+      "kind" : "destructor",
+      "comment" : "            Upon deleting the $(D CSPRNG) object, the libraries used are unloaded,\n            and any relevant cryptographic constructs used by those libraries\n            are released.\n",
+      "line" : 389,
+      "char" : 9,
+      "deco" : "FZv",
+      "endline" : 413,
+      "endchar" : 9
+     },
+     {
+      "name" : "core.sys.windows.windows",
+      "kind" : "import",
+      "line" : 101,
+      "char" : 16,
+      "protection" : "private"
+     },
+     {
+      "name" : "openInstances",
+      "kind" : "variable",
+      "protection" : "private",
+      "line" : 103,
+      "char" : 31,
+      "storageClass" : [
+       "static"
+      ],
+      "deco" : "k",
+      "originalType" : "size_t"
+     },
+     {
+      "name" : "BCRYPT_ALG_HANDLE",
+      "kind" : "alias",
+      "protection" : "private",
+      "line" : 110,
+      "char" : 17,
+      "deco" : "Pv"
+     },
+     {
+      "name" : "HCRYPTPROV",
+      "kind" : "alias",
+      "protection" : "private",
+      "line" : 111,
+      "char" : 17,
+      "deco" : "Pv"
+     },
+     {
+      "name" : "NTSTATUS",
+      "kind" : "alias",
+      "protection" : "private",
+      "line" : 112,
+      "char" : 17,
+      "deco" : "k"
+     },
+     {
+      "name" : "bcrypt",
+      "kind" : "variable",
+      "protection" : "private",
+      "line" : 115,
+      "char" : 32,
+      "storageClass" : [
+       "static"
+      ],
+      "deco" : "Pv",
+      "originalType" : "HMODULE"
+     },
+     {
+      "name" : "cngProviderHandle",
+      "kind" : "variable",
+      "protection" : "private",
+      "line" : 116,
+      "char" : 42,
+      "storageClass" : [
+       "static"
+      ],
+      "deco" : "Pv",
+      "originalType" : "BCRYPT_ALG_HANDLE"
+     },
+     {
+      "name" : "bCryptOpenAlgorithmProviderAddress",
+      "kind" : "variable",
+      "protection" : "private",
+      "line" : 117,
+      "char" : 32,
+      "storageClass" : [
+       "static"
+      ],
+      "deco" : "PWNbZi",
+      "originalType" : "FARPROC"
+     },
+     {
+      "name" : "bCryptCloseAlgorithmProviderAddress",
+      "kind" : "variable",
+      "protection" : "private",
+      "line" : 118,
+      "char" : 32,
+      "storageClass" : [
+       "static"
+      ],
+      "deco" : "PWNbZi",
+      "originalType" : "FARPROC"
+     },
+     {
+      "name" : "bCryptGenRandomAddress",
+      "kind" : "variable",
+      "protection" : "private",
+      "line" : 119,
+      "char" : 32,
+      "storageClass" : [
+       "static"
+      ],
+      "deco" : "PWNbZi",
+      "originalType" : "FARPROC"
+     },
+     {
+      "name" : "advapi32",
+      "kind" : "variable",
+      "protection" : "private",
+      "line" : 122,
+      "char" : 32,
+      "storageClass" : [
+       "static"
+      ],
+      "deco" : "Pv",
+      "originalType" : "HMODULE"
+     },
+     {
+      "name" : "cryptographicServiceProviderHandle",
+      "kind" : "variable",
+      "protection" : "private",
+      "line" : 123,
+      "char" : 35,
+      "storageClass" : [
+       "static"
+      ],
+      "deco" : "Pv",
+      "originalType" : "HCRYPTPROV"
+     },
+     {
+      "name" : "cryptAcquireContextAddress",
+      "kind" : "variable",
+      "protection" : "private",
+      "line" : 124,
+      "char" : 32,
+      "storageClass" : [
+       "static"
+      ],
+      "deco" : "PWNbZi",
+      "originalType" : "FARPROC"
+     },
+     {
+      "name" : "cryptReleaseContextAddress",
+      "kind" : "variable",
+      "protection" : "private",
+      "line" : 125,
+      "char" : 32,
+      "storageClass" : [
+       "static"
+      ],
+      "deco" : "PWNbZi",
+      "originalType" : "FARPROC"
+     },
+     {
+      "name" : "cryptGenRandomAddress",
+      "kind" : "variable",
+      "protection" : "private",
+      "line" : 126,
+      "char" : 32,
+      "storageClass" : [
+       "static"
+      ],
+      "deco" : "PWNbZi",
+      "originalType" : "FARPROC"
+     },
+     {
+      "name" : "rtlGenRandomAddress",
+      "kind" : "variable",
+      "protection" : "private",
+      "line" : 127,
+      "char" : 32,
+      "storageClass" : [
+       "static"
+      ],
+      "deco" : "PWNbZi",
+      "originalType" : "FARPROC"
+     },
+     {
+      "name" : "isUsingCNGAPI",
+      "kind" : "alias",
+      "comment" : "\n",
+      "line" : 130,
+      "char" : 16
+     },
+     {
+      "name" : "isUsingCryptographyNextGenerationAPI",
+      "kind" : "alias",
+      "comment" : "\n",
+      "line" : 132,
+      "char" : 16
+     },
+     {
+      "name" : "isUsingCNGApplicationProgrammingInterface",
+      "kind" : "alias",
+      "comment" : "\n",
+      "line" : 134,
+      "char" : 16
+     },
+     {
+      "name" : "isUsingCryptographyNextGenerationApplicationProgrammingInterface",
+      "kind" : "function",
+      "comment" : "            Returns boolean indicating whether this library is using the Windows\n            $(B Cryptography: Next Generation) API to generate random bytes from\n            the $(MONO BCryptGenRandom) API function.\n\n            More specifically, this library returns true if $(MONO Bcrypt.dll) was found,\n            loaded, and all three requisite functions could be loaded from it,\n            which are:\n            $(UL\n                $(LI $(MONO BCryptOpenAlgorithmProvider))\n                $(LI $(MONO BCryptCloseAlgorithmProvider))\n                $(LI $(MONO BCryptGenRandom))\n            )\n",
+      "line" : 150,
+      "char" : 14,
+      "deco" : "FNbNdNiNfZb",
+      "endline" : 160,
+      "endchar" : 9
+     },
+     {
+      "name" : "isUsingCryptoAPI",
+      "kind" : "alias",
+      "comment" : "\n",
+      "line" : 163,
+      "char" : 16
+     },
+     {
+      "name" : "isUsingCryptoApplicationProgrammingInterface",
+      "kind" : "function",
+      "comment" : "            Returns boolean indicating whether this library is using the Windows\n            $(B Crypto API) to generate random bytes from\n            the $(MONO CryptGenRandom) API function.\n\n            More specifically, this library returns true if $(MONO advapi32.dll) was found,\n            loaded, and all three requisite functions could be loaded from it,\n            which are:\n            $(UL\n                $(LI $(MONO CryptAcquireContext))\n                $(LI $(MONO CryptReleaseContext))\n                $(LI $(MONO CryptGenRandom))\n            )\n",
+      "line" : 179,
+      "char" : 14,
+      "deco" : "FNbNdNiNfZb",
+      "endline" : 189,
+      "endchar" : 9
+     },
+     {
+      "name" : "isUsingRtlGenRandom",
+      "kind" : "function",
+      "comment" : "            Returns a boolean indicating whether this library was able to load\n            $(MONO advapi32.dll) and $(MONO RtlGenRandom) from it, and will\n            use $(MONO RtlGenRandom) to obtain secure random bytes.\n",
+      "line" : 197,
+      "char" : 14,
+      "deco" : "FNbNdNiNfZb",
+      "endline" : 204,
+      "endchar" : 9
+     },
+     {
+      "name" : "getBytes",
+      "kind" : "function",
+      "comment" : "            Returns the specified number of cryptographically-secure\n            pseudo-random bytes, using one of the system APIs.\n\n            Throws:\n            $(UL\n                $(LI $(D CSPRNGException) if one of the functions from the\n                    automatically-select cryptography API could not be loaded.)\n            )\n",
+      "line" : 217,
+      "char" : 16,
+      "deco" : "FxkZAv",
+      "originalType" : "@system void[](in size_t length)",
+      "parameters" : [
+       {
+        "name" : "length",
+        "deco" : "xk"
+       }
+      ],
+      "endline" : 265,
+      "endchar" : 9
+     },
+     {
+      "name" : "this",
+      "kind" : "constructor",
+      "comment" : "            The constructor for a CSPRNG. When a $(D CSPRNG) is created with\n            this constructor, the relevant libraries and functions from them are\n            loaded. If they cannot be loaded, the constructor throws a\n            $(D CSPRNGException) and the $(D CSPRNG) will not be created.\n\n            This constructor first attempts to load the Windows\n            Cryptography: Next Generation API. If that cannot be loaded, it\n            attempts to load the CryptoAPI. If that cannot be loaded, it attempts\n            to load the $(MONO RtlGenRandom) function. If all of those fail,\n            the $(D CSPRNGException) is thrown, since no source of\n            cryptographically-secure pseudo-random bytes can be accessed.\n",
+      "line" : 281,
+      "char" : 9,
+      "deco" : "FZC6csprng6system50CryptographicallySecurePseudoRandomNumberGenerator",
+      "originalType" : "@system ()",
+      "endline" : 381,
+      "endchar" : 9
+     },
+     {
+      "name" : "~this",
+      "kind" : "destructor",
+      "comment" : "            Upon deleting the $(D CSPRNG) object, the libraries used are unloaded,\n            and any relevant cryptographic constructs used by those libraries\n            are released.\n",
+      "line" : 389,
+      "char" : 9,
+      "deco" : "FZv",
+      "endline" : 413,
+      "endchar" : 9
+     },
+     {
+      "kind" : "template",
+      "line" : 513,
+      "char" : 7,
+      "name" : "get",
+      "parameters" : [
+       {
+        "name" : "T",
+        "kind" : "type"
+       }
+      ],
+      "constraint" : "isNumeric!(Unqual!T) || isStaticArray!T && isNumeric!(Unqual!(ForeachType!T))",
+      "members" : [
+       {
+        "name" : "get",
+        "kind" : "function",
+        "line" : 513,
+        "char" : 7,
+        "type" : "@system T()",
+        "endline" : 518,
+        "endchar" : 5
+       }
+      ]
+     },
+     {
+      "name" : "__unittest_csprng_system_521_0",
+      "kind" : "function",
+      "line" : 521,
+      "char" : 5,
+      "storageClass" : [
+       "@system"
+      ],
+      "endline" : 539,
+      "endchar" : 1
+     },
+     {
+      "name" : "__xdtor",
+      "kind" : "alias"
+     }
+    ]
+   },
+   {
+    "name" : "__unittest_csprng_system_546_1",
+    "kind" : "function",
+    "line" : 546,
+    "char" : 1,
+    "storageClass" : [
+     "@system"
+    ],
+    "endline" : 573,
+    "endchar" : 1
+   },
+   {
+    "name" : "__unittest_csprng_system_574_2",
+    "kind" : "function",
+    "line" : 574,
+    "char" : 1,
+    "storageClass" : [
+     "@system"
+    ],
+    "endline" : 663,
+    "endchar" : 2
+   }
+  ]
+ }
+]

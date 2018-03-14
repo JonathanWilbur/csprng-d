@@ -100,6 +100,7 @@ class CryptographicallySecurePseudoRandomNumberGenerator
     {
         import core.sys.windows.windows;
 
+        private static size_t openInstances;
         /* NOTE:
             Question: Should I call malloc() before using these pointers to store data?
             Answer: I don't believe so, because the memory _should be_ allocated by the
@@ -111,19 +112,19 @@ class CryptographicallySecurePseudoRandomNumberGenerator
         private alias NTSTATUS = uint;
 
         // Used by the Cryptography: Next Generation (CNG) API
-        private HMODULE bcrypt; // A pointer to the loaded Bcrypt library (Bcrypt.dll)
-        private BCRYPT_ALG_HANDLE cngProviderHandle; // A pointer to the CNG Provider Handle, which is used by BCryptGenRandomAddress()
-        private FARPROC bCryptOpenAlgorithmProviderAddress; // A pointer to the BCryptOpenAlgorithmProvider() function, as obtained from this.bcrypt
-        private FARPROC bCryptCloseAlgorithmProviderAddress; // A pointer to the BCryptCloseAlgorithmProvider() function, as obtained from this.bcrypt
-        private FARPROC bCryptGenRandomAddress; // A pointer to the BCryptGenRandom() function, as obtained from this.bcrypt
+        private static HMODULE bcrypt; // A pointer to the loaded Bcrypt library (Bcrypt.dll)
+        private static BCRYPT_ALG_HANDLE cngProviderHandle; // A pointer to the CNG Provider Handle, which is used by BCryptGenRandomAddress()
+        private static FARPROC bCryptOpenAlgorithmProviderAddress; // A pointer to the BCryptOpenAlgorithmProvider() function, as obtained from this.bcrypt
+        private static FARPROC bCryptCloseAlgorithmProviderAddress; // A pointer to the BCryptCloseAlgorithmProvider() function, as obtained from this.bcrypt
+        private static FARPROC bCryptGenRandomAddress; // A pointer to the BCryptGenRandom() function, as obtained from this.bcrypt
 
         // Used by the CryptoAPI and the legacy cryptography API
-        private HMODULE advapi32; // A pointer to the loaded Windows Advanced API (advapi32.dll)
-        private HCRYPTPROV cryptographicServiceProviderHandle; // A pointer to the CSP, which is obtained with CryptoAcquireContext(), and used by CryptGenRandom()
-        private FARPROC cryptAcquireContextAddress; // A pointer to CryptAcquireContext(), as obtained from this.advapi32
-        private FARPROC cryptReleaseContextAddress; // A pointer to CryptReleaseContext(), as obtained from this.advapi32
-        private FARPROC cryptGenRandomAddress; // A pointer to CryptGenRandom(), as obtained from this.advapi32
-        private FARPROC rtlGenRandomAddress; // A pointer to RtlGenRandom(), as obtained from this.advapi32
+        private static HMODULE advapi32; // A pointer to the loaded Windows Advanced API (advapi32.dll)
+        private static HCRYPTPROV cryptographicServiceProviderHandle; // A pointer to the CSP, which is obtained with CryptoAcquireContext(), and used by CryptGenRandom()
+        private static FARPROC cryptAcquireContextAddress; // A pointer to CryptAcquireContext(), as obtained from this.advapi32
+        private static FARPROC cryptReleaseContextAddress; // A pointer to CryptReleaseContext(), as obtained from this.advapi32
+        private static FARPROC cryptGenRandomAddress; // A pointer to CryptGenRandom(), as obtained from this.advapi32
+        private static FARPROC rtlGenRandomAddress; // A pointer to RtlGenRandom(), as obtained from this.advapi32
 
         ///
         public alias isUsingCNGAPI = isUsingCryptographyNextGenerationApplicationProgrammingInterface;
@@ -279,6 +280,8 @@ class CryptographicallySecurePseudoRandomNumberGenerator
         public @system
         this ()
         {
+            scope(success) this.openInstances++;
+
             firstTryToUseTheNextGenCryptoAPI:
                 this.bcrypt = LoadLibrary("Bcrypt.dll");
                 if (this.bcrypt == NULL)
@@ -385,23 +388,27 @@ class CryptographicallySecurePseudoRandomNumberGenerator
         public @system
         ~this ()
         {
-            if (this.isUsingCNGAPI)
+            scope(exit) this.openInstances--;
+            if (this.openInstances == 1u)
             {
-                extern (Windows) NTSTATUS function (BCRYPT_ALG_HANDLE hAlgorithm, ULONG dwFlags) BCryptCloseAlgorithmProvider =
-                    cast(NTSTATUS function (BCRYPT_ALG_HANDLE hAlgorithm, ULONG dwFlags)) this.bCryptCloseAlgorithmProviderAddress;
-                BCryptCloseAlgorithmProvider(this.cngProviderHandle, 0u);
-                FreeLibrary(this.bcrypt);
-            }
-            else if (this.isUsingCryptoAPI)
-            {
-                extern (Windows) BOOL function (HCRYPTPROV hProv, DWORD dwFlags) CryptReleaseContext =
-                    cast(BOOL function (HCRYPTPROV hProv, DWORD dwFlags)) this.cryptReleaseContextAddress;
-                CryptReleaseContext(this.cryptographicServiceProviderHandle, 0u);
-                FreeLibrary(this.advapi32);
-            }
-            else if (this.isUsingRtlGenRandom)
-            {
-                FreeLibrary(this.advapi32);
+                if (this.isUsingCNGAPI)
+                {
+                    extern (Windows) NTSTATUS function (BCRYPT_ALG_HANDLE hAlgorithm, ULONG dwFlags) BCryptCloseAlgorithmProvider =
+                        cast(NTSTATUS function (BCRYPT_ALG_HANDLE hAlgorithm, ULONG dwFlags)) this.bCryptCloseAlgorithmProviderAddress;
+                    BCryptCloseAlgorithmProvider(this.cngProviderHandle, 0u);
+                    FreeLibrary(this.bcrypt);
+                }
+                else if (this.isUsingCryptoAPI)
+                {
+                    extern (Windows) BOOL function (HCRYPTPROV hProv, DWORD dwFlags) CryptReleaseContext =
+                        cast(BOOL function (HCRYPTPROV hProv, DWORD dwFlags)) this.cryptReleaseContextAddress;
+                    CryptReleaseContext(this.cryptographicServiceProviderHandle, 0u);
+                    FreeLibrary(this.advapi32);
+                }
+                else if (this.isUsingRtlGenRandom)
+                {
+                    FreeLibrary(this.advapi32);
+                }
             }
         }
     }
@@ -481,14 +488,14 @@ class CryptographicallySecurePseudoRandomNumberGenerator
         ~this ()
         {
             scope(exit) this.openInstances--;
-            if (this.openInstances == 0u)
+            if (this.openInstances == 1u)
                 this.randomFile.detach();
         }
 
         invariant
         {
-            if (this.openInstances > 0u)
-                assert(this.randomFile.isOpen());
+            assert(this.openInstances > 0u);
+            assert(this.randomFile.isOpen());
         }
     }
     else

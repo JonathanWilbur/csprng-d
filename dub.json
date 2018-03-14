@@ -5,7 +5,7 @@
         "Jonathan M. Wilbur <jonathan@wilbur.space>"
     ],
     "license": "MIT",
-	"homepage": "https://github.com/JonathanWilbur/random-d",
+	"homepage": "https://github.com/JonathanWilbur/csprng-d",
 	"targetType": "library",
 	"importPaths": [
 		"source/"
