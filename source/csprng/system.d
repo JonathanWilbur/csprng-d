@@ -223,7 +223,7 @@ class CryptographicallySecurePseudoRandomNumberGenerator
                 extern (Windows) NTSTATUS function (BCRYPT_ALG_HANDLE hAlgorithm, PUCHAR pbBuffer, ULONG cbBuffer, ULONG dwFlags) BCryptGenRandom =
                     cast(NTSTATUS function (BCRYPT_ALG_HANDLE hAlgorithm, PUCHAR pbBuffer, ULONG cbBuffer, ULONG dwFlags)) this.bCryptGenRandomAddress;
 
-                if (BCryptGenRandom(this.cngProviderHandle, bytes.ptr, bytes.length, 0u))
+                if (BCryptGenRandom(this.cngProviderHandle, bytes.ptr, cast(uint) bytes.length, 0u))
                     return bytes;
             }
 
@@ -234,7 +234,7 @@ class CryptographicallySecurePseudoRandomNumberGenerator
                 extern (Windows) BOOL function(HCRYPTPROV hProv, DWORD dwLen, BYTE *pbBuffer) CryptGenRandom
                     = cast(BOOL function(HCRYPTPROV hProv, DWORD dwLen, BYTE *pbBuffer)) this.cryptGenRandomAddress;
 
-                if (CryptGenRandom(this.cryptographicServiceProviderHandle, bytes.length, bytes.ptr))
+                if (CryptGenRandom(this.cryptographicServiceProviderHandle, cast(uint) bytes.length, bytes.ptr))
                     return cast(void[]) bytes;
             }
 
@@ -246,7 +246,7 @@ class CryptographicallySecurePseudoRandomNumberGenerator
                     = cast(BOOLEAN function(PVOID RandomBuffer, ULONG RandomBufferLength)) rtlGenRandomAddress;
 
                 version (unittest) assert(bytes.length == length);
-                if (RtlGenRandom(bytes.ptr, length))
+                if (RtlGenRandom(bytes.ptr, cast(uint) length))
                     return bytes;
             }
 
